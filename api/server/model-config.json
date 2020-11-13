@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "user": {
+    "dataSource": "mysql",
+    "public": true
+  },
+  "token": {
+    "dataSource": "mysql",
+    "public": true
+  },
+  "currency": {
+    "dataSource": "mysql",
+    "public": true
+  },
+  "crypto": {
+    "dataSource": "mysql",
+    "public": true
+  },
+  "article": {
+    "dataSource": "mysql",
+    "public": true
+  },
+  "keyword": {
+    "dataSource": "mysql",
+    "public": true
+  }
+}

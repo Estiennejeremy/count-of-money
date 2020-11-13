@@ -1,0 +1,6 @@
+{
+  "mysql": {
+    "name": "mysql",
+    "connector": "mysql"
+  }
+}

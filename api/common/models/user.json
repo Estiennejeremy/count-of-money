@@ -1,0 +1,43 @@
+{
+  "name": "user",
+  "plural": "users",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "password_hash": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "default": "USER"
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "default_currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "crypto_array": {
+      "type": "array",
+      "required": true
+    },
+    "keywords_array": {
+      "type": "array",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
