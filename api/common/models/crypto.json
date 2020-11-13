@@ -1,0 +1,45 @@
+{
+  "name": "crypto",
+  "plural": "cryptos",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "ico_url": {
+      "type": "string"
+    },
+    "current_price": {
+      "type": "number"
+    },
+    "highest_price": {
+      "type": "number"
+    },
+    "lowest_price": {
+      "type": "number"
+    },
+    "opening_price": {
+      "type": "number"
+    },
+    "created_at": {
+      "type": "date",
+      "required": true
+    },
+    "updated_at": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
