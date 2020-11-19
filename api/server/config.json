@@ -18,5 +18,6 @@
       "limit": "100kb"
     },
     "cors": false
-  }
+  },
+  "crypotCompareKey" : "b77606858f053810bcf46280591652316cd784a9fb65863e4a814ab4c3658915"
 }
