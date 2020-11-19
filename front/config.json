@@ -1,3 +1,5 @@
 {
-  "api_url": "http://localhost:8081/api"
+  "api_url": "http://localhost:8081/api",
+  "github_client_id": "1069e0535e27fb95755d",
+  "github_client_secret": "e8fde2f4b14159581a9ce6c5e72ce841a3bd3094"
 }

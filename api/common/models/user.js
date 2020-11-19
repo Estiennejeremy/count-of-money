@@ -2,6 +2,7 @@
 
 var sha1 = require('sha1');
 const { v1: uuidv1 } = require('uuid');
+const request = require('request-promise-native');
 
 module.exports = function (User) {
   User.register = async function (data) {
@@ -48,6 +49,54 @@ module.exports = function (User) {
     }
   };
 
+  User.githubOauthCall = async function (data) {
+    try {
+      const res = await request({
+        method: 'POST',
+        uri: 'https://github.com/login/oauth/access_token',
+        body: {
+          client_id: data.clientId,
+          client_secret: data.clientSecret,
+          code: data.code,
+        },
+        json: true,
+      });
+      return res;
+    } catch (e) {
+      console.log('error: ', e);
+      return { error: 'an error occured' };
+    }
+  };
+
+  User.githubOauthCallback = async function (data) {
+    var app = User.app;
+    try {
+      const githubUser = await request({
+        method: 'GET',
+        uri: 'https://api.github.com/user',
+        headers: {
+          Authorization: `token ${data.accessToken}`,
+          'User-Agent': 'CountOfMoney',
+        },
+        json: true,
+      });
+      const user = await User.findOrCreate(
+        { where: { username: githubUser.login } },
+        { username: githubUser.login },
+      );
+      const uuid = uuidv1();
+      await app.models.Token.create({
+        token: uuid,
+        fk_user_id: user[0].id,
+        created_at: new Date(),
+      });
+      return { userToken: uuid };
+    } catch (e) {
+      console.log('error: ', e);
+      return { error: e };
+    }
+  };
+
   // User.getUserProfile = async function () {
   //   try {
   //     const user = await User.findOne()({
@@ -81,6 +130,18 @@ module.exports = function (User) {
     accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
     returns: { type: 'object', root: true },
     http: { verb: 'POST' },
+  });
+
+  User.remoteMethod('githubOauthCall', {
+    accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
+    returns: { type: 'object', root: true },
+    http: { path: '/auth/github', verb: 'POST' },
+  });
+
+  User.remoteMethod('githubOauthCallback', {
+    accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
+    returns: { type: 'object', root: true },
+    http: { path: '/auth/github/callback', verb: 'POST' },
   });
 
   // User.remoteMethod('getUserProfile', {
