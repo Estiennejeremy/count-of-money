@@ -12,16 +12,14 @@
       "required": true
     },
     "password_hash": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "role": {
       "type": "string",
       "default": "USER"
     },
     "email": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "default_currency": {
       "type": "string",

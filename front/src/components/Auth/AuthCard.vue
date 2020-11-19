@@ -6,7 +6,7 @@
     </md-card-header>
     <md-card-content>
       <form>
-        <div class="md-layout">
+        <div class="md-layout center-content">
           <div
             v-if="authType === 'signup'"
             class="md-layout-item md-small-size-100 md-size-80"
@@ -28,7 +28,28 @@
               <md-input v-model="user.password" type="password"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-size-100 button-container">
+          <div class="md-layout-item md-size-100 center-content">
+            <md-button
+              v-if="authType === 'signup'"
+              class="md-raised md-info button-size"
+              @click.prevent="signup"
+              >Create</md-button
+            >
+            <md-button
+              v-if="authType === 'signin'"
+              class="md-raised md-info button-size"
+              @click.prevent="signin"
+              >Log in</md-button
+            >
+            <span class="form-error">{{ formError }}</span>
+            <!-- <span>OR</span> -->
+            <md-button
+              class="md-raised button-size"
+              @click.prevent="githubConnect"
+            >
+              <i class="fab fa-github github-icon"></i>
+              Connect with Github
+            </md-button>
             <span v-if="authType === 'signup'">
               Already have an account ?
               <p @click.prevent="redirectSigninSignup" class="link">
@@ -41,19 +62,9 @@
                 Sign up here
               </p>
             </span>
-            <span class="form-error">{{ formError }}</span>
-            <md-button
-              v-if="authType === 'signup'"
-              class="md-raised md-info"
-              @click.prevent="signup"
-              >Create</md-button
-            >
-            <md-button
-              v-if="authType === 'signin'"
-              class="md-raised md-info"
-              @click.prevent="signin"
-              >Log in</md-button
-            >
+            <!-- <md-button class="md-raised md-info" @click.prevent="githubConnect"
+              >Github connect</md-button
+            > -->
           </div>
         </div>
       </form>
@@ -62,9 +73,14 @@
 </template>
 
 <script>
-import { createUser, logInUser } from '../../api_wrapper/user';
+import {
+  createUser,
+  logInUser,
+  githubOauth,
+  githubOauthCallback,
+} from '../../api_wrapper/user';
 import Cookies from 'js-cookie';
-
+import config from '../../../config.json';
 export default {
   name: 'auth-card',
   props: {
@@ -137,6 +153,23 @@ export default {
       Cookies.set('token', token.userToken);
       this.$router.push('dashboard');
     },
+    githubConnect() {
+      window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.github_client_id}`;
+    },
+  },
+
+  async mounted() {
+    const githubCode = this.$route.query.code;
+    if (githubCode) {
+      const authToken = await githubOauth({
+        clientId: config.github_client_id,
+        clientSecret: config.github_client_secret,
+        code: githubCode,
+      });
+      const res = await githubOauthCallback(authToken.access_token);
+      Cookies.set('token', res.userToken);
+      this.$router.push('dashboard');
+    }
   },
 };
 </script>
@@ -153,17 +186,27 @@ export default {
   color: #e53935;
 }
 
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.button-size {
+  width: 50%;
 }
 
 .link {
+  text-align: center;
   cursor: pointer;
   color: #1dc7ea;
   &:hover {
     text-decoration: underline;
   }
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.github-icon {
+  padding-right: 10px;
 }
 </style>
