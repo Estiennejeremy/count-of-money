@@ -16,6 +16,8 @@ services:
       DB_IP: db
     volumes:
       - ./api:/src
+    depends_on:
+      - db
 
   front:
     build:
