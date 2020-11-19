@@ -29,11 +29,11 @@
     },
     "crypto_array": {
       "type": "array",
-      "required": true
+      "default": []
     },
     "keywords_array": {
       "type": "array",
-      "required": true
+      "default": []
     }
   },
   "validations": [],
