@@ -17,7 +17,7 @@
     },
     "image_url": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "summary": {
       "type": "string"
@@ -30,7 +30,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "feeds": {
+      "type": "hasOne",
+      "model": "feed",
+      "foreignKey": ""
+    }
+  },
   "acls": [],
   "methods": {}
 }

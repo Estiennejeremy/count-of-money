@@ -36,5 +36,9 @@
   "keyword": {
     "dataSource": "mysql",
     "public": true
+  },
+  "feed": {
+    "dataSource": "mysql",
+    "public": true
   }
 }
