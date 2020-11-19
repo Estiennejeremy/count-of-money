@@ -25,4 +25,8 @@ module.exports = function (app) {
     if (err) throw err;
     console.log('Autoupdated table `Users`.\n');
   });
+  mysql.autoupdate('feed', function (err) {
+    if (err) throw err;
+    console.log('Autoupdated table `Feed`.\n');
+  });
 };
