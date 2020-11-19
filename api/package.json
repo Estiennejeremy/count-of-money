@@ -20,7 +20,9 @@
     "loopback-component-explorer": "^6.2.0",
     "loopback-connector-mysql": "^6.0.0",
     "serve-favicon": "^2.0.1",
-    "strong-error-handler": "^3.0.0"
+    "sha1": "^1.1.1",
+    "strong-error-handler": "^3.0.0",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "eslint": "^3.17.1",
