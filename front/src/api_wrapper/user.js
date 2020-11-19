@@ -1,7 +1,4 @@
 import config from '../../config.json';
-// import Cookies from 'js-cookie';
-
-// const userToken = Cookies.get('token');
 
 export async function createUser(userData) {
   try {
