@@ -122,7 +122,7 @@ module.exports = function (User) {
           return {error: 'Invalid parameter'};
       });
 
-      if (sum !== 5)
+      if (sum < 5)
         return {error: 'Missing parameter'}
 
       await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password), crypto_array: data.cryptos, keywords_array: data.keywords})
