@@ -97,6 +97,10 @@ module.exports = function (User) {
     }
   };
 
+  User.editUser = async data => {
+    return 'test';
+  }
+
   // User.getUserProfile = async function () {
   //   try {
   //     const user = await User.findOne()({
@@ -143,6 +147,12 @@ module.exports = function (User) {
     returns: { type: 'object', root: true },
     http: { path: '/auth/github/callback', verb: 'POST' },
   });
+
+  User.remoteMethod('editUser', {
+    accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
+    returns: { type: 'object', root: true },
+    http: { path: '/profile', verb: 'PUT' },
+  })
 
   // User.remoteMethod('getUserProfile', {
   //   accepts: [{ arg: 'userId', type: 'string', required: true }],
