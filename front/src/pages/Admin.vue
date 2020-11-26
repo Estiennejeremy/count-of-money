@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="md-layout">
-      coucou user
+      coucou admin
     </div>
   </div>
 </template>
