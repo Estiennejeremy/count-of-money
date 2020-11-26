@@ -2,29 +2,25 @@
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
     <notifications></notifications>
 
-    <side-bar
-      :sidebar-item-color="sidebarBackground"
-      :sidebar-background-image="sidebarBackgroundImage"
-    >
+    <side-bar :sidebar-item-color="sidebarBackground">
       <mobile-menu slot="content"></mobile-menu>
-      <sidebar-link to="/dashboard">
-        <md-icon>dashboard</md-icon>
-        <p>Dashboard</p>
-      </sidebar-link>
       <sidebar-link to="/cryptos">
-        <md-icon>person</md-icon>
-        <p>Cryptos</p>
+        <md-icon>attach_money</md-icon>
+        <p>Cryptos {{ this.userRole }}</p>
       </sidebar-link>
       <sidebar-link to="/articles">
-        <md-icon>person</md-icon>
+        <md-icon>article</md-icon>
         <p>Articles</p>
       </sidebar-link>
-      <sidebar-link to="/user">
+      <sidebar-link
+        to="/user"
+        v-if="userRole === 'USER' || userRole === 'ADMIN'"
+      >
         <md-icon>person</md-icon>
         <p>User Profile</p>
       </sidebar-link>
-      <sidebar-link to="/admin">
-        <md-icon>person</md-icon>
+      <sidebar-link to="/admin" v-if="userRole === 'ADMIN'">
+        <md-icon>admin_panel_settings</md-icon>
         <p>Admin</p>
       </sidebar-link>
     </side-bar>
@@ -32,35 +28,35 @@
     <div class="main-panel">
       <top-navbar></top-navbar>
 
-      <fixed-plugin :color.sync="sidebarBackground"> </fixed-plugin>
-
       <dashboard-content> </dashboard-content>
-
-      <content-footer v-if="!$route.meta.hideFooter"></content-footer>
     </div>
   </div>
 </template>
 
 <script>
 import TopNavbar from './TopNavbar.vue';
-import ContentFooter from './ContentFooter.vue';
 import DashboardContent from './Content.vue';
 import MobileMenu from '@/pages/Layout/MobileMenu.vue';
-import FixedPlugin from './Extra/FixedPlugin.vue';
+import { getUserRoleById } from '../../api_wrapper/user';
+import { getUserIdByToken } from '../../api_wrapper/token';
+import Cookies from 'js-cookie';
 
 export default {
   components: {
     TopNavbar,
     DashboardContent,
-    ContentFooter,
     MobileMenu,
-    FixedPlugin,
   },
   data() {
     return {
-      sidebarBackground: 'green',
-      sidebarBackgroundImage: require('@/assets/img/sidebar-2.jpg'),
+      sidebarBackground: 'blue',
+      userRole: '',
     };
+  },
+  async beforeMount() {
+    const userToken = Cookies.get('token');
+    const userId = await getUserIdByToken(userToken);
+    this.userRole = await getUserRoleById(userId);
   },
 };
 </script>

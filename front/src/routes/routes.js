@@ -14,7 +14,15 @@ function authGuard(to, from, next) {
   if (!Cookies.get('token')) {
     next();
   } else {
-    next('/dashboard');
+    next('/crypto');
+  }
+}
+
+function guard(to, from, next) {
+  if (Cookies.get('token')) {
+    next();
+  } else {
+    next('/signin');
   }
 }
 
@@ -35,13 +43,8 @@ const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/dashboard',
+    redirect: '/cryptos',
     children: [
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
-      },
       {
         path: 'cryptos',
         name: 'Cryptos',
@@ -55,11 +58,13 @@ const routes = [
       {
         path: 'user',
         name: 'User Profile',
+        beforeEnter: guard,
         component: UserProfile,
       },
       {
         path: 'admin',
         name: 'Admin',
+        beforeEnter: guard,
         component: Admin,
       },
     ],
