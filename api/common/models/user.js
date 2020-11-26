@@ -97,8 +97,44 @@ module.exports = function (User) {
     }
   };
 
+  User.getUsers = async id => {
+    try {
+      if (!id)
+        return {error: 'Invalid Parameter'};
+
+      let user = await User.findOne({where: {id: id}});
+
+      return {user: user};
+    } catch (error) {
+      return {error: 'User don\'t exist'}
+    }
+  }
+
+  /* Update user profile custom route */
   User.editUser = async data => {
-    return 'test';
+    try {
+      let sum = 0;
+
+      Object.entries(data).forEach(e => {
+        ++sum;
+
+        if (e[0] === null || e[1] === null)
+          return {error: 'Invalid parameter'};
+      });
+
+      if (sum !== 5)
+        return {error: 'Missing parameter'}
+
+      await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password), crypto_array: data.cryptos, keywords_array: data.keywords})
+
+      let user = await User.findOne({
+        where: {id: data.id}
+      });
+
+      return {user: user};
+    } catch (error) {
+      return {'error': 'Can\'t update user', e: error};      
+    }
   }
 
   // User.getUserProfile = async function () {
@@ -148,11 +184,17 @@ module.exports = function (User) {
     http: { path: '/auth/github/callback', verb: 'POST' },
   });
 
+  User.remoteMethod('getUsers', {
+    accepts: [{ arg: 'id', type: 'integer' }],
+    returns: { type: 'object', root: true },
+    http: { path: '/profile', verb: 'GET' },
+  });
+
   User.remoteMethod('editUser', {
     accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
     returns: { type: 'object', root: true },
     http: { path: '/profile', verb: 'PUT' },
-  })
+  });
 
   // User.remoteMethod('getUserProfile', {
   //   accepts: [{ arg: 'userId', type: 'string', required: true }],
