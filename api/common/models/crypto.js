@@ -41,6 +41,7 @@ module.exports = function (Crypto) {
             {
               code: res.RAW[raw][currency].FROMSYMBOL,
               name: res.RAW[raw][currency].FROMSYMBOL,
+              ico_url: res.RAW[raw][currency].IMAGEURL,
               created_at: new Date(),
               updated_at: new Date()
             });
@@ -77,7 +78,7 @@ module.exports = function (Crypto) {
         const crypto = await Crypto.findOne({where: { id: id } });
         const res = await request({
           method: 'GET',
-          uri: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=1',
+          uri: 'https://min-api.cryptocompare.com/data/v2/histoday',
           qs: {
             fsym: crypto.code,
             tsyms: currency,
