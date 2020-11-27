@@ -53,7 +53,7 @@ export default {
       userRole: '',
     };
   },
-  async beforeMount() {
+  async mounted() {
     const userToken = Cookies.get('token');
     const userId = await getUserIdByToken(userToken);
     this.userRole = await getUserRoleById(userId);
