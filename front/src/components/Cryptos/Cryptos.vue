@@ -1,8 +1,10 @@
 <template>
   <div class="md-card" :key="user.crypto_array.length">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <div class="md-card-header">
+      My cryptos :
+    </div>
     <div class="md-card-content">
-      <h3>My cryptos :</h3>
       <md-field>
         <label>Add Crypto</label>
         <md-select v-model="cryptoSelected">

@@ -142,29 +142,6 @@ module.exports = function (User) {
     }
   }
 
-  // User.getUserProfile = async function () {
-  //   try {
-  //     const user = await User.findOne()({
-  //       where: { id: userId },
-  //     });
-  //     if (!user) return { error: 'User not found' };
-  //     return { user: user };
-  //   } catch (e) {}
-  // };
-
-  // User.updateUserProfile = async function (data) {
-  //   try {
-  //     const user = await User.findOne()({
-  //       where: { id: userId },
-  //     });
-  //     if (!user) return { error: 'User not found' };
-  //     await User.updateAll({ id: userId }, { data });
-  //     return { user: user };
-  //   } catch (e) {
-  //     return { error: e };
-  //   }
-  // };
-
   User.remoteMethod('register', {
     accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
     returns: { type: 'object', root: true },
