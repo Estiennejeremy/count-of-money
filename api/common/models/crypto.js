@@ -36,20 +36,12 @@ module.exports = function (Crypto) {
         });
 
         for (var raw in res.RAW) {
-          let crypto = await Crypto.findOrCreate(
-            {where: {code: res.RAW[raw][currency].FROMSYMBOL}},
-            {
-              code: res.RAW[raw][currency].FROMSYMBOL,
-              name: res.RAW[raw][currency].FROMSYMBOL,
-              ico_url: res.RAW[raw][currency].IMAGEURL,
-              created_at: new Date(),
-              updated_at: new Date()
-            });
-          crypto[0].current_price = res.RAW[raw][currency].PRICE;
-          crypto[0].highest_price = res.RAW[raw][currency].HIGH24HOUR;
-          crypto[0].lowest_price = res.RAW[raw][currency].LOW24HOUR;
-          crypto[0].opening_price = res.RAW[raw][currency].OPEN24HOUR;
-          result.cryptos.push(crypto[0]);
+          let crypto = await Crypto.findOne({where: { code: res.RAW[raw][currency].FROMSYMBOL } });
+          crypto.current_price = res.RAW[raw][currency].PRICE;
+          crypto.highest_price = res.RAW[raw][currency].HIGH24HOUR;
+          crypto.lowest_price = res.RAW[raw][currency].LOW24HOUR;
+          crypto.opening_price = res.RAW[raw][currency].OPEN24HOUR;
+          result.cryptos.push(crypto);
         }
         return result;
       } catch (err) {
@@ -68,6 +60,52 @@ module.exports = function (Crypto) {
           },
           json: true,
         });
+        return res;
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    Crypto.postFromSymbol = async function (data) {
+      console.log(data);
+      try {
+        const res = await request({
+          method: 'GET',
+          uri: 'https://min-api.cryptocompare.com/data/blockchain/list',
+          qs: {
+            api_key: apiKey
+          },
+          json: true,
+        });
+
+        if (res.Data[data.symbol]) {
+          const res2 = await request({
+            method: 'GET',
+            uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
+            qs: {
+              api_key: apiKey,
+              tsyms: data.currency,
+              fsyms: data.symbol
+            },
+            json: true,
+          });
+          let crypto = await Crypto.findOrCreate(
+            {where: {code: res2.RAW[data.symbol][data.currency].FROMSYMBOL}},
+            {
+              code: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
+              name: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
+              ico_url: res2.RAW[data.symbol][data.currency].IMAGEURL,
+              created_at: new Date(),
+              updated_at: new Date()
+            });
+          crypto.current_price = res2.RAW[data.symbol][data.currency].PRICE;
+          crypto.highest_price = res2.RAW[data.symbol][data.currency].HIGH24HOUR;
+          crypto.lowest_price = res2.RAW[data.symbol][data.currency].LOW24HOUR;
+          crypto.opening_price = res2.RAW[data.symbol][data.currency].OPEN24HOUR;
+
+          return crypto;
+        } else {
+          return console.error("this coin doesn't exist");
+        }
         return res;
       } catch (err) {
         console.error(err);
@@ -136,7 +174,7 @@ module.exports = function (Crypto) {
       http: {verb: 'GET'},
       returns: {type: 'object', root: true}
     })
-    Crypto.remoteMethod('postFromId', {
+    Crypto.remoteMethod('postFromSymbol', {
       accepts: [{arg: 'data', type: 'object', http: {source: 'body'}}],
       http: {verb: 'POST'},
       returns: {type: 'object', root: true}
