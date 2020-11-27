@@ -72,6 +72,41 @@ module.exports = function (Crypto) {
         console.error(err);
       }
     },
+    Crypto.getById = async function (id, currency) {
+      try {
+        const crypto = await Crypto.findOne({where: { id: id } });
+        const res = await request({
+          method: 'GET',
+          uri: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=1',
+          qs: {
+            fsym: crypto.code,
+            tsyms: currency,
+            limit: "1",
+            api_key: apiKey
+          },
+          json: true,
+        });
+        const res2 = await request({
+          method: 'GET',
+          uri: 'https://min-api.cryptocompare.com/data/price',
+          qs: {
+            fsym: crypto.code,
+            tsyms: currency,
+            api_key: apiKey
+          },
+          json: true,
+        });
+        console.log(res.Data.Data[0].high);
+        crypto.current_price = res[currency];
+        crypto.highest_price = res.Data.Data[0].high;
+        crypto.lowest_price = res.Data.Data[0].low;
+        crypto.opening_price = res.Data.Data[0].open;
+        crypto.updated_ate = new Date()
+        return crypto;
+      } catch (err) {
+        console.error(err);
+      }
+    },
 
 
     Crypto.remoteMethod('AllMarketCrypto', {
@@ -92,6 +127,14 @@ module.exports = function (Crypto) {
       http: {verb: 'GET'},
       returns: {type: 'object', root: true}
     }),
+    Crypto.remoteMethod('getById', {
+      accepts: [
+        {arg: 'cryptoId', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true}
+      ],
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true}
+    })
     Crypto.remoteMethod('postFromId', {
       accepts: [{arg: 'data', type: 'object', http: {source: 'body'}}],
       http: {verb: 'POST'},
