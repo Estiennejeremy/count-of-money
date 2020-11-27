@@ -58,13 +58,13 @@ export default {
     },
     handleLogout() {
       Cookies.remove('token');
-      this.$router.push(signin);
+      this.$router.push('signin');
     },
     redirectSignup() {
       this.$router.push('signup');
     },
   },
-  async beforeMount() {
+  async mounted() {
     const userToken = Cookies.get('token');
     const userId = await getUserIdByToken(userToken);
     this.username = await getUsernameById(userId);
