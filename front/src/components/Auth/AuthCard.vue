@@ -136,7 +136,7 @@ export default {
         return;
       }
       Cookies.set('token', token.userToken);
-      this.$router.push('dashboard');
+      this.$router.push('cryptos');
     },
     async signup() {
       this.checkForm();
@@ -151,7 +151,7 @@ export default {
         return;
       }
       Cookies.set('token', token.userToken);
-      this.$router.push('dashboard');
+      this.$router.push('cryptos');
     },
     githubConnect() {
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.github_client_id}`;
@@ -168,7 +168,7 @@ export default {
       });
       const res = await githubOauthCallback(authToken.access_token);
       Cookies.set('token', res.userToken);
-      this.$router.push('dashboard');
+      this.$router.push('cryptos');
     }
   },
 };

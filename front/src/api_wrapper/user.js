@@ -1,5 +1,28 @@
 import config from '../../config.json';
 
+export async function getUsernameById(userId) {
+  try {
+    const res = await fetch(`${config.api_url}/users/${userId}`, {
+      method: 'GET',
+    });
+    const resUser = await res.json();
+    return resUser.username;
+  } catch (e) {
+    return { err: e };
+  }
+}
+
+export async function getUserRoleById(userId) {
+  try {
+    const res = await fetch(`${config.api_url}/users/${userId}`, {
+      method: 'GET',
+    });
+    const resUser = await res.json();
+    return resUser.role;
+  } catch (e) {
+    return { err: e };
+  }
+}
 export async function createUser(userData) {
   try {
     const res = await fetch(`${config.api_url}/users/register`, {
