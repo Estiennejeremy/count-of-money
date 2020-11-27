@@ -115,6 +115,7 @@ module.exports = function (User) {
     try {
       let sum = 0;
 
+      // return {res: data.password, cond: data.password === undefined, cond2: data.password === null};
       Object.entries(data).forEach(e => {
         ++sum;
 
@@ -123,13 +124,13 @@ module.exports = function (User) {
       });
 
       if (sum < 5)
-        return {error: 'Missing parameter'}
-
-      // if (this.password !== '')
-      //   await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password)});
+        return {error: 'Missing parameter'};
+        
+      if (data.password !== undefined)
+        await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password)});
       
-      // else
-        await User.updateAll({id: data.id}, {crypto_array: data.cryptos, keywords_array: data.keywords});
+      else
+        await User.updateAll({id: data.id}, {username: data.username, email: data.email, crypto_array: data.cryptos, keywords_array: data.keywords});
       
       let user = await User.findOne({
         where: {id: data.id}

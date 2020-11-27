@@ -1,8 +1,8 @@
 <template>
-  <div class="md-card" :key="myCryptos.length">
+  <div class="md-card" :key="user.crypto_array.length">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <div class="md-card-content">
-      <h3>My cryptos</h3>
+      <h3>My cryptos :</h3>
       <md-field>
         <label>Add Crypto</label>
         <md-select v-model="cryptoSelected">
@@ -31,15 +31,12 @@ export default {
   data: () => {
     return {
       cryptos: ["Bitcoin", "Ethereum", "..."],
-      myCryptos: [],
       cryptoSelected: null,
       user: {crypto_array: []},
     };
   },
   async beforeMount() {
     this.user = (await user_profile_store.getUser(1)).user;
-    
-    this.myCryptos = this.user.crypto_array;
   },
   watch: {
     cryptoSelected: async function () {
@@ -73,15 +70,10 @@ export default {
 </script>
 
 <style scoped>
-.badge {
-  height: 20px;
-  background-color: #eeeeee;
-}
-
 .wrap {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(100px, auto));
+  grid-template-columns: repeat(auto-fill, minmax(105px, auto));
 
   height: 200px;
 
@@ -91,14 +83,21 @@ export default {
 .wrap > * {
   background-color: inherit;
   height: 30px;
+
   width: auto;
 
   border: 1px solid #9e9e9e;
   border-radius: 15px;
 
-  display: flex;
+  /* display: flex;
   justify-content: space-around;
+  align-items: center; */
+
+  display: grid;
+  grid-template-columns: minmax(80px, auto) 35px;
   align-items: center;
-  padding-left: 10px;
+  gap: 5px;
+
+  text-align: center;
 }
 </style>
