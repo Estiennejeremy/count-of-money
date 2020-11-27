@@ -1,6 +1,6 @@
 <template>
-  <div class="md-card">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <div class="md-card" :key="myCryptos.length">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <div class="md-card-content">
       <h3>My cryptos</h3>
       <md-field>
@@ -12,7 +12,7 @@
         </md-select>
       </md-field>
       <div class="wrap">
-        <div class="badge" v-for="crypto in myCryptos" :key="crypto">
+        <div class="badge" v-for="crypto in user.crypto_array" :key="crypto">
           {{ cryptos[crypto] }}
           <md-button class="md-icon-button md-simple" v-on:click="deleteCrypto(crypto)">
             <md-icon class="fa fa-times-circle"></md-icon>
@@ -24,38 +24,58 @@
 </template>
 
 <script>
+import user_profile_store from "../../store/user_profile";
+
 export default {
   name: "Cryptos",
   data: () => {
-      return {
-          cryptos: ['Bitcoin', 'Ethereum', '...'],
-          myCryptos: [],
-          cryptoSelected: null 
-      };
+    return {
+      cryptos: ["Bitcoin", "Ethereum", "..."],
+      myCryptos: [],
+      cryptoSelected: null,
+      user: {crypto_array: []},
+    };
+  },
+  async beforeMount() {
+    this.user = (await user_profile_store.getUser(1)).user;
+    
+    this.myCryptos = this.user.crypto_array;
   },
   watch: {
-      cryptoSelected: function() {
-          if (!this.myCryptos.includes(this.cryptoSelected))
-            this.myCryptos = [...this.myCryptos, this.cryptoSelected];
+    cryptoSelected: async function () {
+      if (!this.user.crypto_array.includes(this.cryptoSelected) && this.cryptoSelected !== null)
+      {
+        this.user.cryptos = [...this.user.crypto_array, this.cryptoSelected];
+        this.user.keywords = this.user.keywords_array;
+
+        this.user = (await user_profile_store.editUser(this.user)).user;
       }
+
+      this.cryptoSelected = null;
+    },
   },
   methods: {
-      deleteCrypto: function(id)
-        {
-            if (this.myCryptos.length > 1)
-                this.myCryptos = [...this.myCryptos].splice(id, 1);
-            
-            else
-                this.myCryptos = [];
-        },
-  }
+    deleteCrypto: async function (id) {
+      let arr = [];
+
+      this.user.crypto_array.forEach(e => {
+        if (e !== id)
+          arr.push(e);
+      });
+
+      this.user.cryptos = arr;
+      this.user.keywords = this.user.keywords_array;
+        
+      this.user = (await user_profile_store.editUser(this.user)).user;
+    },
+  },
 };
 </script>
 
 <style scoped>
 .badge {
-    height: 20px;
-    background-color: #EEEEEE;
+  height: 20px;
+  background-color: #eeeeee;
 }
 
 .wrap {
@@ -68,12 +88,12 @@ export default {
   overflow: auto;
 }
 
-.wrap>* {
+.wrap > * {
   background-color: inherit;
   height: 30px;
   width: auto;
 
-  border: 1px solid #9E9E9E;
+  border: 1px solid #9e9e9e;
   border-radius: 15px;
 
   display: flex;

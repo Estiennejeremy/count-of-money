@@ -125,8 +125,12 @@ module.exports = function (User) {
       if (sum < 5)
         return {error: 'Missing parameter'}
 
-      await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password), crypto_array: data.cryptos, keywords_array: data.keywords})
-
+      // if (this.password !== '')
+      //   await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password)});
+      
+      // else
+        await User.updateAll({id: data.id}, {crypto_array: data.cryptos, keywords_array: data.keywords});
+      
       let user = await User.findOne({
         where: {id: data.id}
       });

@@ -13,7 +13,6 @@ class UserProfile {
 
     async editUser(user)
     {
-        console.log(user);
         let res = await fetch(`${config.api_url}/users/profile`, {
             method: 'PUT',
             headers: {
