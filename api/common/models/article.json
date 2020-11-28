@@ -27,6 +27,11 @@
     },
     "source": {
       "type": "string"
+    },
+    "keywords": {
+      "type": [
+        "number"
+      ]
     }
   },
   "validations": [],
