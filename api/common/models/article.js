@@ -46,21 +46,14 @@ module.exports = function(Article) {
 
     Article.get = async function(req) {
         var app = Article.app;
-        const user = await app.models.User.find({where: {token: req.headers.token}});
-
+        const token = await app.models.Token.find({where: {token: req.headers.token}});
         //Convert string to array of int
-        const keywords = req.query.keywords.split(",").map(value => {return parseInt(value, 10)});
-        // User is not connected
-        console.log(user);
-        if (user.id != null) {
-            const articles = await Article.find({
-                order: 'id DESC',
-                limit: 3
-            });
-            console.log("coucou");
-            return articles;
-        } else {
-            console.log("AAA");
+        var keywords = null;
+
+        if (req.query.keywords != null)
+            keywords = req.query.keywords.split(",").map(value => {return parseInt(value, 10)});
+        
+        if (token.length == 1 && keywords) {
             const articles = await Article.find();
             var res = [];
             articles.forEach(article => {
@@ -68,8 +61,13 @@ module.exports = function(Article) {
                 if (article.keywords.some(key => keywords.indexOf(key) >= 0))
                     res.push(article);
             })
-
             return res;
+        } else {
+            const articles = await Article.find({
+                order: 'id DESC',
+                limit: 5
+            });
+            return articles;
         }
     }
 
