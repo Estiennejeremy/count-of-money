@@ -6,16 +6,13 @@
       <mobile-menu slot="content"></mobile-menu>
       <sidebar-link to="/cryptos">
         <md-icon>attach_money</md-icon>
-        <p>Cryptos {{ this.userRole }}</p>
+        <p>Cryptos</p>
       </sidebar-link>
       <sidebar-link to="/articles">
         <md-icon>article</md-icon>
         <p>Articles</p>
       </sidebar-link>
-      <sidebar-link
-        to="/user"
-        v-if="userRole === 'USER' || userRole === 'ADMIN'"
-      >
+      <sidebar-link to="/user" v-if="userRole === 'USER'">
         <md-icon>person</md-icon>
         <p>User Profile</p>
       </sidebar-link>
