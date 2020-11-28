@@ -97,28 +97,50 @@ module.exports = function (User) {
     }
   };
 
-  // User.getUserProfile = async function () {
-  //   try {
-  //     const user = await User.findOne()({
-  //       where: { id: userId },
-  //     });
-  //     if (!user) return { error: 'User not found' };
-  //     return { user: user };
-  //   } catch (e) {}
-  // };
+  User.getUsers = async id => {
+    try {
+      if (!id)
+        return {error: 'Invalid Parameter'};
 
-  // User.updateUserProfile = async function (data) {
-  //   try {
-  //     const user = await User.findOne()({
-  //       where: { id: userId },
-  //     });
-  //     if (!user) return { error: 'User not found' };
-  //     await User.updateAll({ id: userId }, { data });
-  //     return { user: user };
-  //   } catch (e) {
-  //     return { error: e };
-  //   }
-  // };
+      let user = await User.findOne({where: {id: id}});
+
+      return {user: user};
+    } catch (error) {
+      return {error: 'User don\'t exist'}
+    }
+  }
+
+  /* Update user profile custom route */
+  User.editUser = async data => {
+    try {
+      let sum = 0;
+
+      // return {res: data.password, cond: data.password === undefined, cond2: data.password === null};
+      Object.entries(data).forEach(e => {
+        ++sum;
+
+        if (e[0] === null || e[1] === null)
+          return {error: 'Invalid parameter'};
+      });
+
+      if (sum < 5)
+        return {error: 'Missing parameter'};
+        
+      if (data.password !== undefined)
+        await User.updateAll({id: data.id}, {username: data.username, email: data.email, password_hash: sha1(data.password)});
+      
+      else
+        await User.updateAll({id: data.id}, {username: data.username, email: data.email, crypto_array: data.cryptos, keywords_array: data.keywords});
+      
+      let user = await User.findOne({
+        where: {id: data.id}
+      });
+
+      return {user: user};
+    } catch (error) {
+      return {'error': 'Can\'t update user', e: error};      
+    }
+  }
 
   User.remoteMethod('register', {
     accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
@@ -142,6 +164,18 @@ module.exports = function (User) {
     accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
     returns: { type: 'object', root: true },
     http: { path: '/auth/github/callback', verb: 'POST' },
+  });
+
+  User.remoteMethod('getUsers', {
+    accepts: [{ arg: 'id', type: 'integer' }],
+    returns: { type: 'object', root: true },
+    http: { path: '/profile', verb: 'GET' },
+  });
+
+  User.remoteMethod('editUser', {
+    accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
+    returns: { type: 'object', root: true },
+    http: { path: '/profile', verb: 'PUT' },
   });
 
   // User.remoteMethod('getUserProfile', {
