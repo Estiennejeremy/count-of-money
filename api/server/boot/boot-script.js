@@ -1,5 +1,7 @@
 module.exports = function (app) {
   var mysql = app.dataSources.mysql;
+  var user = app.models.User;
+  const sha1 = require('sha1');
 
   mysql.autoupdate('article', function (err) {
     if (err) throw err;
@@ -29,4 +31,8 @@ module.exports = function (app) {
     if (err) throw err;
     console.log('Autoupdated table `Feed`.\n');
   });
+  user.findOrCreate(
+    { where: { username: 'admin' } },
+    { username: 'admin', password_hash: sha1('admin'), role: 'ADMIN' },
+  );
 };

@@ -12,6 +12,17 @@ export async function getUsernameById(userId) {
   }
 }
 
+export async function getUserById(userId) {
+  try {
+    const res = await fetch(`${config.api_url}/users/${userId}`, {
+      method: 'GET',
+    });
+    return await res.json();
+  } catch (e) {
+    return { err: e };
+  }
+}
+
 export async function getUserRoleById(userId) {
   try {
     const res = await fetch(`${config.api_url}/users/${userId}`, {
@@ -89,6 +100,22 @@ export async function githubOauthCallback(accessToken) {
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
+    });
+    return await res.json();
+  } catch (e) {
+    return { error: e };
+  }
+}
+
+export async function editUser(user) {
+  try {
+    const res = await fetch(`${config.api_url}/users/profile`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
     });
     return await res.json();
   } catch (e) {
