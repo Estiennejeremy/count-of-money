@@ -3,5 +3,11 @@
 </template>
 
 <script>
-export default {};
+import { startArticlesCronJob } from './api_wrapper/articles';
+
+export default {
+  async mounted() {
+    await startArticlesCronJob();
+  },
+};
 </script>
