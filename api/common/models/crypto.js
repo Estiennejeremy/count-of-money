@@ -36,6 +36,7 @@ module.exports = function (Crypto) {
             },
             json: true,
           });
+          crypto.updated_at = new Date();
           crypto.current_price = res.RAW[crypto.code][currency].PRICE;
           crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
           crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
@@ -66,6 +67,7 @@ module.exports = function (Crypto) {
           let crypto = await Crypto.findOne({
             where: {code: res.RAW[raw][currency].FROMSYMBOL},
           });
+          crypto.update_at = new Date();
           crypto.current_price = res.RAW[raw][currency].PRICE;
           crypto.highest_price = res.RAW[raw][currency].HIGH24HOUR;
           crypto.lowest_price = res.RAW[raw][currency].LOW24HOUR;
