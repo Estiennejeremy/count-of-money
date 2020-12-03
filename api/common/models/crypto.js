@@ -20,6 +20,32 @@ module.exports = function (Crypto) {
       console.error(err);
     }
   }),
+    (Crypto.AllCrypto = async function (currency) {
+      try {
+        let cryptos = await Crypto.find();
+
+        await Promise.all(cryptos.map(async (crypto) => {
+          let res = await request({
+
+            method: 'GET',
+            uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
+            qs: {
+              api_key: apiKey,
+              tsyms: currency,
+              fsyms: crypto.code
+            },
+            json: true,
+          });
+          crypto.current_price = res.RAW[crypto.code][currency].PRICE;
+          crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
+          crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
+          crypto.opening_price = res.RAW[crypto.code][currency].OPEN24HOUR;
+        }));
+        return cryptos;
+      } catch (err) {
+        console.error(err);
+      }
+    }),
     (Crypto.detailInfo = async function (symbol, currency) {
       try {
         var result = {
@@ -38,7 +64,7 @@ module.exports = function (Crypto) {
 
         for (var raw in res.RAW) {
           let crypto = await Crypto.findOne({
-            where: { code: res.RAW[raw][currency].FROMSYMBOL },
+            where: {code: res.RAW[raw][currency].FROMSYMBOL},
           });
           crypto.current_price = res.RAW[raw][currency].PRICE;
           crypto.highest_price = res.RAW[raw][currency].HIGH24HOUR;
@@ -91,7 +117,7 @@ module.exports = function (Crypto) {
           });
           let crypto = await Crypto.findOrCreate(
             {
-              where: { code: res2.RAW[data.symbol][data.currency].FROMSYMBOL },
+              where: {code: res2.RAW[data.symbol][data.currency].FROMSYMBOL},
             },
             {
               code: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
@@ -110,7 +136,7 @@ module.exports = function (Crypto) {
 
           return crypto;
         } else {
-          return { error: 'This coin does not exist' };
+          return {error: 'This coin does not exist'};
         }
         return res;
       } catch (err) {
@@ -119,7 +145,7 @@ module.exports = function (Crypto) {
     }),
     (Crypto.getById = async function (id, currency) {
       try {
-        const crypto = await Crypto.findOne({ where: { id: id } });
+        const crypto = await Crypto.findOne({where: {id: id}});
         const res = await request({
           method: 'GET',
           uri: 'https://min-api.cryptocompare.com/data/v2/histoday',
@@ -152,33 +178,41 @@ module.exports = function (Crypto) {
       }
     }),
     Crypto.remoteMethod('AllMarketCrypto', {
-      http: { verb: 'GET' },
-      returns: { type: 'object', root: true },
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true},
+    }),
+    Crypto.remoteMethod('AllCrypto', {
+      accepts: [
+        {arg: 'currency', type: 'string', required: true}
+      ],
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true}
+
     }),
     Crypto.remoteMethod('CryptoLastInfo', {
-      accepts: [{ arg: 'cryptoSymbol', type: 'string', required: true }],
-      http: { verb: 'GET' },
-      returns: { type: 'object', root: true },
+      accepts: [{arg: 'cryptoSymbol', type: 'string', required: true}],
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true},
     }),
     Crypto.remoteMethod('detailInfo', {
       accepts: [
-        { arg: 'cryptoSymbol', type: 'string', required: true },
-        { arg: 'currency', type: 'string', required: true },
+        {arg: 'cryptoSymbol', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true},
       ],
-      http: { verb: 'GET' },
-      returns: { type: 'object', root: true },
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true},
     }),
     Crypto.remoteMethod('getById', {
       accepts: [
-        { arg: 'cryptoId', type: 'string', required: true },
-        { arg: 'currency', type: 'string', required: true },
+        {arg: 'cryptoId', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true},
       ],
-      http: { verb: 'GET' },
-      returns: { type: 'object', root: true },
-    });
-  Crypto.remoteMethod('postFromSymbol', {
-    accepts: [{ arg: 'data', type: 'object', http: { source: 'body' } }],
-    http: { verb: 'POST' },
-    returns: { type: 'object', root: true },
-  });
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true},
+    }),
+    Crypto.remoteMethod('postFromSymbol', {
+      accepts: [{arg: 'data', type: 'object', http: {source: 'body'}}],
+      http: {verb: 'POST'},
+      returns: {type: 'object', root: true},
+    })
 };
