@@ -13,16 +13,16 @@
     </div>
     <div class="md-layout">
       <div
-        class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-25"
-        v-for="article in fakeData"
+        class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-33"
+        v-for="article in articlesData"
         :key="article.link"
       >
         <article-card
           :title="article.title"
-          :description="article.description"
-          :image="article.image"
-          :link="article.link"
-          :date="article.date"
+          :description="article.summary"
+          :image="article.image_url"
+          :link="article.url"
+          :date="article.formattedDate"
         ></article-card>
       </div>
     </div>
@@ -31,65 +31,53 @@
 
 <script>
 import ArticleCard from '../components/Articles/ArticleCard.vue';
+import { getArticlesByKeywords } from '../api_wrapper/articles';
+import { getUserById } from '../api_wrapper/user';
+import { getUserIdByToken } from '../api_wrapper/token';
+
+import Cookies from 'js-cookie';
+
 export default {
   components: { ArticleCard },
   watch: {
     sortParam: function() {
       if (this.sortParam === 'ascent') {
-        this.fakeData.sort((a, b) => {
+        this.articlesData.sort((a, b) => {
           return new Date(a.date) - new Date(b.date);
         });
       }
       if (this.sortParam === 'descent') {
-        this.fakeData.sort((a, b) => {
+        this.articlesData.sort((a, b) => {
           return new Date(b.date) - new Date(a.date);
         });
       }
     },
   },
+  methods: {
+    formatArticleDate(articleDate) {
+      const date = new Date(articleDate);
+      return `${date.toISOString().split('T')[0]} at ${date.toLocaleTimeString(
+        'fr-FR',
+      )}`;
+    },
+  },
   data() {
     return {
       sortParam: '',
-      fakeData: [
-        {
-          title: 'The cat is cute',
-          description:
-            'I love cats very much I want them all I love cats very much I want them all I love cats very much I want them all I love cats very much I want them all I love cats very much I want them all',
-          link: 'https://google.com',
-          date: '03/02/2020',
-          image:
-            'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg',
-        },
-        {
-          title: 'The cat is cute AGAIn lol mdr',
-          description: 'I love cats very much I want them all AGAIN',
-          link: 'https://google.com',
-          date: '01/03/2019',
-          image:
-            'https://icatcare.org/app/uploads/2018/06/Layer-1704-1920x840.jpg',
-        },
-        {
-          title: 'The cat is cute',
-          description: 'I love cats very much I want them all',
-          link: 'https://google.com',
-          date: '04/02/2020',
-        },
-        {
-          title: 'The cat is cute',
-          description: 'I love cats very much I want them all',
-          link: 'https://google.com',
-          date: '01/09/2020',
-          image:
-            'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg',
-        },
-        {
-          title: 'The cat is cute',
-          description: 'I love cats very much I want them all',
-          link: 'https://google.com',
-          date: '01/02/2020',
-        },
-      ],
+      articlesData: [],
     };
+  },
+
+  async mounted() {
+    const token = Cookies.get('token');
+    if (token) {
+      const userId = await getUserIdByToken(token);
+      const user = await getUserById(userId);
+      this.articlesData = await getArticlesByKeywords(user.keywords_array);
+    }
+    this.articlesData.forEach(
+      element => (element.formattedDate = this.formatArticleDate(element.date)),
+    );
   },
 };
 </script>

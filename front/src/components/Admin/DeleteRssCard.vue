@@ -17,7 +17,7 @@
               v-for="feed in feedArray"
               :key="feed.id"
               :value="feed.id"
-              >{{ feed.name }}</md-option
+              >{{ getFeedKeyword(feed.keywords[0]) }}</md-option
             >
           </md-select>
         </md-field>
@@ -37,6 +37,7 @@
 
 <script>
 import { getAllFeeds, deleteFeedById } from '../../api_wrapper/feed';
+import { getAllKeywords } from '../../api_wrapper/keyword';
 
 export default {
   name: 'delete-rss-card',
@@ -46,6 +47,7 @@ export default {
       formSuccess: '',
       feedId: '',
       feedArray: [],
+      keywordsArray: [],
     };
   },
   methods: {
@@ -64,9 +66,13 @@ export default {
       else this.formSuccess = 'RSS feed successfully deleted';
       this.feedArray = await getAllFeeds();
     },
+    getFeedKeyword(keywordId) {
+      return this.keywordsArray.find(element => element.id === keywordId).name;
+    },
   },
   async mounted() {
     this.feedArray = await getAllFeeds();
+    this.keywordsArray = await getAllKeywords();
   },
 };
 </script>
