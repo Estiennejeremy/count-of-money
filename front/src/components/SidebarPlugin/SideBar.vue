@@ -1,22 +1,10 @@
 <template>
-  <div
-    class="sidebar"
-    :data-color="sidebarItemColor"
-    :data-image="sidebarBackgroundImage"
-    :style="sidebarStyle"
-  >
+  <div class="sidebar" :data-color="sidebarItemColor">
     <div class="logo">
       <a href="#" class="simple-text logo-mini">
-        <div class="logo-img">
-          <img :src="imgLogo" alt="" />
-        </div>
+        <img :src="imgLogo" alt="" />
       </a>
-
-      <a
-        href="https://www.creative-tim.com/product/vue-material-dashboard"
-        target="_blank"
-        class="simple-text logo-normal"
-      >
+      <a class="simple-text logo-normal">
         {{ title }}
       </a>
     </div>
@@ -38,60 +26,53 @@
   </div>
 </template>
 <script>
-import SidebarLink from "./SidebarLink.vue";
+import SidebarLink from './SidebarLink.vue';
 
 export default {
   components: {
-    SidebarLink
+    SidebarLink,
   },
   props: {
     title: {
       type: String,
-      default: "Vue MD"
+      default: 'Count of money',
     },
-    sidebarBackgroundImage: {
-      type: String,
-      default: require("@/assets/img/sidebar-2.jpg")
-    },
+
     imgLogo: {
       type: String,
-      default: require("@/assets/img/vue-logo.png")
+      default: require('@/assets/img/Bitcoin.png'),
     },
     sidebarItemColor: {
       type: String,
-      default: "green",
+      default: 'green',
       validator: value => {
-        let acceptedValues = ["", "purple", "blue", "green", "orange", "red"];
+        let acceptedValues = ['', 'purple', 'blue', 'green', 'orange', 'red'];
         return acceptedValues.indexOf(value) !== -1;
-      }
+      },
     },
     sidebarLinks: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     autoClose: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   provide() {
     return {
-      autoClose: this.autoClose
+      autoClose: this.autoClose,
     };
   },
-  computed: {
-    sidebarStyle() {
-      return {
-        backgroundImage: `url(${this.sidebarBackgroundImage})`
-      };
-    }
-  }
 };
 </script>
 <style>
 @media screen and (min-width: 991px) {
   .nav-mobile-menu {
     display: none;
+  }
+  .sidebar {
+    background-color: #3e3e3e;
   }
 }
 </style>
