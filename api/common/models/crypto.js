@@ -20,6 +20,27 @@ module.exports = function (Crypto) {
       console.error(err);
     }
   }),
+    (Crypto.histo = async function (id, time, currency) {
+      try {
+        // time = histominute / histohour / histoday
+        let crypto = await Crypto.findById(id);
+        console.log(crypto)
+        const res = await request({
+          method: 'GET',
+          uri: 'https://min-api.cryptocompare.com/data/v2/histo' + time,
+          qs: {
+            api_key: apiKey,
+            limit: 60,
+            fsym: crypto.code,
+            tsym: currency
+          },
+          json: true,
+        });
+        return res;
+      } catch (err) {
+        console.error(err);
+      }
+    }),
     (Crypto.AllCrypto = async function (currency) {
       try {
         let cryptos = await Crypto.find();
@@ -79,22 +100,6 @@ module.exports = function (Crypto) {
         console.error(err);
       }
     }),
-    (Crypto.CryptoLastInfo = async function (data) {
-      try {
-        const res = await request({
-          method: 'GET',
-          uri: 'https://min-api.cryptocompare.com/data/blockchain/latest',
-          qs: {
-            fsym: data,
-            api_key: apiKey,
-          },
-          json: true,
-        });
-        return res;
-      } catch (err) {
-        console.error(err);
-      }
-    }),
     (Crypto.postFromSymbol = async function (data) {
       try {
         const res = await request({
@@ -117,30 +122,37 @@ module.exports = function (Crypto) {
             },
             json: true,
           });
+          const res3 = await request({
+            method: 'GET',
+            uri: 'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
+            qs: {
+              api_key: apiKey,
+              tsyms: data.currency,
+              fsyms: data.symbol,
+            },
+            json: true,
+          });
           let crypto = await Crypto.findOrCreate(
             {
               where: {code: res2.RAW[data.symbol][data.currency].FROMSYMBOL},
             },
             {
               code: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
-              name: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
+              name: res3.Data[data.symbol].CoinInfo.FullName,
               ico_url: res2.RAW[data.symbol][data.currency].IMAGEURL,
               created_at: new Date(),
               updated_at: new Date(),
             },
           );
           crypto.current_price = res2.RAW[data.symbol][data.currency].PRICE;
-          crypto.highest_price =
-            res2.RAW[data.symbol][data.currency].HIGH24HOUR;
+          crypto.highest_price = res2.RAW[data.symbol][data.currency].HIGH24HOUR;
           crypto.lowest_price = res2.RAW[data.symbol][data.currency].LOW24HOUR;
-          crypto.opening_price =
-            res2.RAW[data.symbol][data.currency].OPEN24HOUR;
+          crypto.opening_price = res2.RAW[data.symbol][data.currency].OPEN24HOUR;
 
           return crypto;
         } else {
           return {error: 'This coin does not exist'};
         }
-        return res;
       } catch (err) {
         console.error(err);
       }
@@ -191,14 +203,18 @@ module.exports = function (Crypto) {
       returns: {type: 'object', root: true}
 
     }),
-    Crypto.remoteMethod('CryptoLastInfo', {
-      accepts: [{arg: 'cryptoSymbol', type: 'string', required: true}],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
-    }),
     Crypto.remoteMethod('detailInfo', {
       accepts: [
         {arg: 'cryptoSymbol', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true},
+      ],
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true},
+    }),
+    Crypto.remoteMethod('histo', {
+      accepts: [
+        {arg: 'cryptoId', type: 'string', required: true},
+        {arg: 'period', type: 'string', required: true},
         {arg: 'currency', type: 'string', required: true},
       ],
       http: {verb: 'GET'},
