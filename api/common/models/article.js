@@ -20,6 +20,7 @@ module.exports = function(Article) {
                                 url: item[params.url],
                                 date: item[params.date],
                                 summary: item[params.summary],
+                                image: item[params.image],
                                 feedId: feed.id
                             }
                         },
@@ -27,6 +28,7 @@ module.exports = function(Article) {
                             title: item[params.title],
                             url: item[params.url],
                             date: item[params.date],
+                            image_url: item[params.image],
                             summary: item[params.summary],
                             keywords: feed.keywords,
                             feedId: feed.id
