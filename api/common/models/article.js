@@ -13,14 +13,20 @@ module.exports = function(Article) {
                 var feedData = await parser.parseURL(feed.url);
                 feedData.items.forEach(item => {
                     var params = feed.params;
+                    var regex = /src="(https?:\/\/[a-zA-Z0-9~\-\/\?_.=& ]*)"/gm;
+                    var match = regex.exec(item[params.image]);
+                    var imageUrl = match[1];
+                    var summary = item[params.summary];
+                    if (summary.length > 512) {
+                        summary = summary.substring(0, 512);
+                    }
                     Article.findOrCreate(
                         {
                             where: {
                                 title: item[params.title],
                                 url: item[params.url],
                                 date: item[params.date],
-                                summary: item[params.summary],
-                                image: item[params.image],
+                                summary: summary,
                                 feedId: feed.id
                             }
                         },
@@ -28,14 +34,17 @@ module.exports = function(Article) {
                             title: item[params.title],
                             url: item[params.url],
                             date: item[params.date],
-                            image_url: item[params.image],
-                            summary: item[params.summary],
+                            image_url: imageUrl,
+                            summary: summary,
                             keywords: feed.keywords,
                             feedId: feed.id
 
                         },
                         (err, log) => {
-                            if (err) res = {status: 400, message: 'Error for article creation from RSS feeds'}
+                            if (err) {
+                                console.log(err);
+                                return {status: 400, message: 'Error for article creation from RSS feeds'}
+                            }
                         }
                     );
                 })
