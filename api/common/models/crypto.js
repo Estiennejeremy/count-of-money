@@ -22,7 +22,12 @@ module.exports = function (Crypto) {
   }),
     (Crypto.histo = async function (id, time, currency) {
       try {
-        // time = histominute / histohour / histoday
+        let limit = 60;
+        if(time === "hour") {
+          limit = 48
+        }
+
+        // time = minute / hour / day
         let crypto = await Crypto.findById(id);
         console.log(crypto)
         const res = await request({
@@ -30,7 +35,7 @@ module.exports = function (Crypto) {
           uri: 'https://min-api.cryptocompare.com/data/v2/histo' + time,
           qs: {
             api_key: apiKey,
-            limit: 60,
+            limit: limit,
             fsym: crypto.code,
             tsym: currency
           },
