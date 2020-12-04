@@ -7,7 +7,7 @@
             <h4 class="title">Mes cryptos Money</h4>
           </md-card-header>
           <md-card-content>
-            <simple-table table-header-color="green"></simple-table>
+            <cryptos-table table-header-color="green"></cryptos-table>
           </md-card-content>
         </md-card>
       </div>
@@ -17,14 +17,12 @@
 
 <script>
 
-import {
-  SimpleTable
-} from '@/components'
+import CryptosTable from '../components/Cryptos/CryptosTable.vue';
 
 
 export default{
   components: {
-    SimpleTable
+    CryptosTable
   }
 }
 
