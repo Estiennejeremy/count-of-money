@@ -39,3 +39,27 @@ export async function deleteCryptoById(cryptoId) {
     return { err: e };
   }
 }
+
+export default async function getCryptosByIdsCurrency(ids, currency) {
+  try {
+    let cryptos = await getAllCryptos();
+    let arr = [];
+    
+    ids.forEach(e => {
+      cryptos.forEach(el => {
+        if (el.id === e)
+          arr.push(el.code);
+      });
+    });
+
+    arr = arr.join(',');
+
+    const cr = await fetch(`${config.api_url}/cryptos/cryptoById?cryptoId=${arr}&currency=${currency}`, {
+      method: 'GET',
+    });
+
+    return cr.json();
+  } catch (error) {
+    return {err: error};
+  }
+}
