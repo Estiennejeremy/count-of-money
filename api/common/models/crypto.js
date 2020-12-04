@@ -29,7 +29,6 @@ module.exports = function (Crypto) {
 
         // time = minute / hour / day
         let crypto = await Crypto.findById(id);
-        console.log(crypto)
         const res = await request({
           method: 'GET',
           uri: 'https://min-api.cryptocompare.com/data/v2/histo' + time,
