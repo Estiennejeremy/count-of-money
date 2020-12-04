@@ -82,7 +82,6 @@ module.exports = function (Crypto) {
         }
         await Promise.all(cryptos.map(async (crypto) => {
           if(crypto !== null) {
-            console.log(crypto)
             let res = await request({
 
               method: 'GET',
