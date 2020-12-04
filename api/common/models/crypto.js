@@ -77,7 +77,9 @@ module.exports = function (Crypto) {
         let cryptos = [];
         for (var id in ids) {
           let crypto = await Crypto.findById(id);
-          cryptos.push(crypto);
+          if(crypto !== null ) {
+            cryptos.push(crypto);
+          }
         }
         await Promise.all(cryptos.map(async (crypto) => {
           if(crypto !== null) {
