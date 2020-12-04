@@ -72,6 +72,41 @@ module.exports = function (Crypto) {
         console.error(err);
       }
     }),
+    (Crypto.cryptoById = async function (ids, currency) {
+      try {
+        let cryptos = [];
+        for (var id in ids) {
+          let crypto = await Crypto.findById(id);
+          if(crypto !== null ) {
+            cryptos.push(crypto);
+          }
+        }
+        await Promise.all(cryptos.map(async (crypto) => {
+          if(crypto !== null) {
+            let res = await request({
+
+              method: 'GET',
+              uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
+              qs: {
+                api_key: apiKey,
+                tsyms: currency,
+                fsyms: crypto.code
+              },
+              json: true,
+            });
+            crypto.updated_at = new Date();
+            crypto.current_price = res.RAW[crypto.code][currency].PRICE;
+            crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
+            crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
+            crypto.opening_price = res.RAW[crypto.code][currency].OPEN24HOUR;
+          }
+
+        }));
+        return cryptos;
+      } catch (err) {
+        console.error(err);
+      }
+    }),
     (Crypto.detailInfo = async function (symbol, currency) {
       try {
         var result = {
@@ -198,6 +233,15 @@ module.exports = function (Crypto) {
     Crypto.remoteMethod('AllMarketCrypto', {
       http: {verb: 'GET'},
       returns: {type: 'object', root: true},
+    }),
+    Crypto.remoteMethod('cryptoById', {
+      accepts: [
+        {arg: 'cryptoId', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true}
+      ],
+      http: {verb: 'GET'},
+      returns: {type: 'object', root: true}
+
     }),
     Crypto.remoteMethod('AllCrypto', {
       accepts: [
