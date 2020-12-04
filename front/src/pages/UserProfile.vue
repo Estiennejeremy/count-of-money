@@ -6,11 +6,34 @@
       </div>
     </div>
     <div class="md-layout">
-      <div class="md-layout-item">
-        <Cryptos />
+      <div
+        class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-50"
+      >
+        <cryptos>
+          <template v-slot:title>
+            <h4 class="title">My cryptocurrencies</h4>
+          </template>
+          <template v-slot:subtitle>
+            <p class="subtitle">
+              They will be displayed on the Cryptos page
+            </p>
+          </template>
+        </cryptos>
       </div>
-      <div class="md-layout-item">
-        <Keywords />
+      <div
+        class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-50"
+      >
+        <keywords>
+          <template v-slot:title>
+            <h4 class="title">My keywords</h4>
+          </template>
+          <template v-slot:subtitle>
+            <p class="subtitle">
+              Articles linked to these keywords will be displayed on the Press
+              page
+            </p>
+          </template>
+        </keywords>
       </div>
     </div>
   </div>

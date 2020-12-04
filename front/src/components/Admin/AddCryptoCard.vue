@@ -28,6 +28,7 @@
 
 <script>
 import { createCrypto } from '../../api_wrapper/crypto';
+import Cookies from 'js-cookie';
 
 export default {
   name: 'add-crypto-card',
