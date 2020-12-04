@@ -13,6 +13,15 @@
     </div>
     <div class="md-layout">
       <div
+        v-if="articlesData.length === 0"
+        class="md-layout-item md-size-100 text-center"
+      >
+        <h4>
+          Seems like there is nothing to read... Try to add more keywords to
+          your preferencies !
+        </h4>
+      </div>
+      <div
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-33"
         v-for="article in articlesData"
         :key="article.link"
@@ -73,7 +82,12 @@ export default {
     if (token) {
       const userId = await getUserIdByToken(token);
       const user = await getUserById(userId);
-      this.articlesData = await getArticlesByKeywords(user.keywords_array);
+      this.articlesData = await getArticlesByKeywords(
+        user.keywords_array,
+        token,
+      );
+    } else {
+      this.articlesData = await getArticlesByKeywords([], '');
     }
     this.articlesData.forEach(
       element => (element.formattedDate = this.formatArticleDate(element.date)),

@@ -33,6 +33,11 @@ module.exports = function (app) {
   });
   user.findOrCreate(
     { where: { username: 'admin' } },
-    { username: 'admin', password_hash: sha1('admin'), role: 'ADMIN' },
+    {
+      username: 'admin',
+      password_hash: sha1('admin'),
+      role: 'ADMIN',
+      keywords_array: [10],
+    },
   );
 };

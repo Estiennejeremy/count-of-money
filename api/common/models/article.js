@@ -44,7 +44,7 @@ async function createArticlesFromRSS(app) {
 }
 
 module.exports = function (Article) {
-  (Article.createFromRSS = async function () {
+  Article.createFromRSS = async function () {
     var app = Article.app;
     const job = new CronJob(
       '0 * * * *',
@@ -56,46 +56,48 @@ module.exports = function (Article) {
       'Europe/Andorra',
     );
     job.start;
-  }),
-    (Article.get = async function (req) {
-      var app = Article.app;
-      const token = await app.models.Token.find({
-        where: { token: req.headers.token },
-      });
-      //Convert string to array of int
-      var keywords = null;
-
-      if (req.query.keywords != null)
-        keywords = req.query.keywords.split(',').map((value) => {
-          return parseInt(value, 10);
-        });
-
-      if (token.length == 1 && keywords) {
-        const articles = await Article.find();
-        var res = [];
-        articles.forEach((article) => {
-          //If one of article keyword is in keyword wanted list
-          if (article.keywords.some((key) => keywords.indexOf(key) >= 0))
-            res.push(article);
-        });
-        return res;
-      } else {
-        const articles = await Article.find({
-          order: 'id DESC',
-          limit: 5,
-        });
-        return articles;
-      }
+  };
+  Article.getByKeywordsId = async function (req) {
+    var app = Article.app;
+    const token = await app.models.Token.find({
+      where: { token: req.headers.token },
     });
+    //Convert string to array of int
+    var keywords = null;
+
+    if (req.query.keywords != null)
+      keywords = req.query.keywords.split(',').map((value) => {
+        return parseInt(value, 10);
+      });
+    if (token.length == 1 && keywords) {
+      const articles = await Article.find();
+      var res = [];
+      articles.forEach((article) => {
+        //If one of article keyword is in keyword wanted list
+        if (article.keywords.some((key) => keywords.indexOf(key) >= 0))
+          res.push(article);
+      });
+      return res;
+    } else {
+      const admin = await app.models.User.findOne({
+        where: { username: 'admin' },
+      });
+      const articles = await Article.find({
+        order: 'id DESC',
+        limit: admin.keywords_array[0],
+      });
+      return articles;
+    }
+  };
 
   Article.remoteMethod('createFromRSS', {
     returns: { type: 'object', root: true },
     http: { verb: 'POST' },
   });
 
-  Article.remoteMethod('get', {
+  Article.remoteMethod('getByKeywordsId', {
     accepts: { arg: 'req', type: 'object', http: { source: 'req' } },
     returns: { type: 'object', root: true },
-    http: { verb: 'POST' },
+    http: { verb: 'GET' },
   });
 };

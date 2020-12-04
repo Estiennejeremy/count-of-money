@@ -136,6 +136,7 @@ module.exports = function (User) {
             {
               username: data.username,
               email: data.email,
+              default_currency: data.currency,
               password_hash: sha1(data.password),
             },
           );
@@ -143,6 +144,7 @@ module.exports = function (User) {
           await User.updateAll(
             { id: data.id },
             {
+              default_currency: data.currency,
               username: data.username,
               email: data.email,
             },
