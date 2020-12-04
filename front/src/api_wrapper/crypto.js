@@ -14,7 +14,7 @@ export async function createCrypto(data) {
     });
     return await currency.json();
   } catch (e) {
-    console.log(e);
+    return {err: e};
   }
 }
 

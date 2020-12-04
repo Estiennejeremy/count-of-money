@@ -7,6 +7,6 @@ export async function getUserIdByToken(token) {
     );
     return (await tokenData.json())[0].fk_user_id;
   } catch (e) {
-    console.log(e);
+    return {err: e};
   }
 }
