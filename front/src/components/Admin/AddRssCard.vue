@@ -15,8 +15,8 @@
           </div>
           <div class="md-layout-item md-small-size-100 md-size-50">
             <md-field>
-              <label>Name</label>
-              <md-input v-model="rss.name" type="text"></md-input>
+              <label>Linked keyword</label>
+              <md-input v-model="rss.keyword" type="text"></md-input>
             </md-field>
           </div>
 
@@ -45,7 +45,7 @@
             </md-field>
           </div>
           <div class="md-layout-item md-size-100 text-right">
-            <md-button class="md-raised md-info" @click.prevent="addCrypto()"
+            <md-button class="md-raised md-info" @click.prevent="addFeed()"
               >Add</md-button
             >
           </div>
@@ -60,7 +60,8 @@
 </template>
 
 <script>
-import { createCrypto } from '../../api_wrapper/crypto';
+import { createKeyword } from '../../api_wrapper/keyword';
+import { createFeed } from '../../api_wrapper/feed';
 
 export default {
   name: 'add-rss-card',
@@ -70,7 +71,7 @@ export default {
       formSuccess: '',
       rss: {
         url: '',
-        name: '',
+        keyword: '',
         titleCorresp: '',
         urlCorresp: '',
         summaryCorresp: '',
@@ -82,20 +83,28 @@ export default {
     isFormValid() {
       return !!(
         this.rss.url &&
-        this.rss.name &&
+        this.rss.keyword &&
         this.rss.titleCorresp &&
         this.rss.urlCorresp &&
         this.rss.summaryCorresp &&
         this.rss.dateCorresp
       );
     },
-    async addCrypto() {
+    async addFeed() {
       this.formError = '';
       this.formSuccess = '';
       if (!this.isFormValid()) {
         this.formError = 'You must fill all fields';
         return;
       }
+      const keyword = await createKeyword(this.rss.keyword);
+      if (!keyword[1]) {
+        this.formError = 'This keyword is already used by another RSS feed';
+        return;
+      }
+      const feed = await createFeed(this.rss, keyword.id);
+      if (feed.error) this.formError = 'This RSS feed already exists';
+      else this.formSuccess = 'RSS feed successfully added !';
     },
   },
 };

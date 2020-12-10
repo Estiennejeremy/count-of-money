@@ -33,16 +33,16 @@
       <div
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-33"
       >
-        <keywords>
+        <default-articles-card>
           <template v-slot:title>
-            <h4 class="title">Default keywords</h4>
+            <h4 class="title">Default number of articles</h4>
           </template>
           <template v-slot:subtitle>
             <p class="subtitle">
-              It will be the default keywords for non connected users
+              The X last articles will be displayed for non connected users
             </p>
           </template>
-        </keywords>
+        </default-articles-card>
       </div>
       <div
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-33"
@@ -59,7 +59,7 @@ import DeleteCryptoCard from '../components/Admin/DeleteCryptoCard';
 import AddRssCard from '../components/Admin/AddRssCard';
 import DeleteRssCard from '../components/Admin/DeleteRssCard';
 import Cryptos from '../components/UserProfile/Cryptos';
-import Keywords from '../components/UserProfile/Keywords';
+import DefaultArticlesCard from '../components/Admin/DefaultArticlesCard';
 
 export default {
   components: {
@@ -68,7 +68,7 @@ export default {
     AddRssCard,
     DeleteRssCard,
     Cryptos,
-    Keywords,
+    DefaultArticlesCard,
   },
 };
 </script>

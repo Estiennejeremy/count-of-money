@@ -204,7 +204,7 @@ module.exports = function (Crypto) {
           uri: 'https://min-api.cryptocompare.com/data/v2/histoday',
           qs: {
             fsym: crypto.code,
-            tsyms: currency,
+            tsym: currency,
             limit: '1',
             api_key: apiKey,
           },
@@ -220,6 +220,7 @@ module.exports = function (Crypto) {
           },
           json: true,
         });
+        
         crypto.current_price = res[currency];
         crypto.highest_price = res.Data.Data[0].high;
         crypto.lowest_price = res.Data.Data[0].low;

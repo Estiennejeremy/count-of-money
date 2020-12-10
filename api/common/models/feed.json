@@ -22,13 +22,6 @@
     }
   },
   "validations": [],
-  "relations": {
-    "articles": {
-      "type": "hasMany",
-      "model": "article",
-      "foreignKey": ""
-    }
-  },
   "acls": [],
   "methods": {}
 }

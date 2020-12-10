@@ -7,6 +7,23 @@
       <form>
         <div class="md-layout-item md-small-size-100 md-size-75">
           <md-field>
+            <label for="currency">Default currency</label>
+            <md-select v-model="user.currency" name="currency" id="currency">
+              <md-option value="USD">USD</md-option>
+              <md-option value="EUR">EUR</md-option>
+              <md-option value="GPB">GBP</md-option>
+              <md-option value="JPY">JPY</md-option>
+              <md-option value="AUD">AUD</md-option>
+              <md-option value="CAD">CAD</md-option>
+              <md-option value="CHF">CHF</md-option>
+              <md-option value="CNH">CNH</md-option>
+              <md-option value="SEK">SEK</md-option>
+              <md-option value="NZD">NZD</md-option>
+            </md-select>
+          </md-field>
+        </div>
+        <div class="md-layout-item md-small-size-100 md-size-75">
+          <md-field>
             <label>Username</label>
             <md-input v-model="user.username"></md-input>
           </md-field>
@@ -52,6 +69,7 @@ export default {
         username: '',
         email: '',
         password: '',
+        currency: '',
       },
     };
   },
@@ -63,6 +81,7 @@ export default {
       username: user.username,
       email: user.email,
       id: user.id,
+      currency: user.default_currency,
     };
   },
   methods: {
