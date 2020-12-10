@@ -6,7 +6,7 @@
       <mobile-menu slot="content"></mobile-menu>
       <sidebar-link to="/cryptos">
         <md-icon>attach_money</md-icon>
-        <p>Cryptos</p>
+        <p>Crypto currencies</p>
       </sidebar-link>
       <sidebar-link to="/articles">
         <md-icon>article</md-icon>

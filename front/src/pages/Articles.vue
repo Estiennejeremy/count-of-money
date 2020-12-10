@@ -82,10 +82,14 @@ export default {
     if (token) {
       const userId = await getUserIdByToken(token);
       const user = await getUserById(userId);
-      this.articlesData = await getArticlesByKeywords(
-        user.keywords_array,
-        token,
-      );
+      if (user.username === 'admin') {
+        this.articlesData = await getArticlesByKeywords([], '');
+      } else {
+        this.articlesData = await getArticlesByKeywords(
+          user.keywords_array,
+          token,
+        );
+      }
     } else {
       this.articlesData = await getArticlesByKeywords([], '');
     }

@@ -22,23 +22,23 @@ module.exports = function (Crypto) {
   }),
     (Crypto.histo = async function (id, time, currency) {
       try {
-        if(!currency) {
-          currency = "EUR"
+        if (!currency) {
+          currency = 'EUR';
         }
         var timeStamp = null;
         let limit = null;
         switch (time) {
-          case "daily":
-            timeStamp = "day";
-            limit = 60
+          case 'daily':
+            timeStamp = 'day';
+            limit = 60;
             break;
-          case "hourly":
-            timeStamp = "hour";
-            limit = 48
+          case 'hourly':
+            timeStamp = 'hour';
+            limit = 48;
             break;
-          case "minute":
-            timeStamp = "minute";
-            limit = 120
+          case 'minute':
+            timeStamp = 'minute';
+            limit = 120;
             break;
         }
 
@@ -51,7 +51,7 @@ module.exports = function (Crypto) {
             api_key: apiKey,
             limit: limit,
             fsym: crypto.code,
-            tsym: currency
+            tsym: currency,
           },
           json: true,
         });
@@ -62,29 +62,30 @@ module.exports = function (Crypto) {
     }),
     (Crypto.AllCrypto = async function (req, currency) {
       try {
-        if(!currency) {
-          currency = "EUR"
+        if (!currency) {
+          currency = 'EUR';
         }
         let cryptos = await Crypto.find();
 
-        await Promise.all(cryptos.map(async (crypto) => {
-          let res = await request({
-
-            method: 'GET',
-            uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
-            qs: {
-              api_key: apiKey,
-              tsyms: currency,
-              fsyms: crypto.code
-            },
-            json: true,
-          });
-          crypto.updated_at = new Date();
-          crypto.current_price = res.RAW[crypto.code][currency].PRICE;
-          crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
-          crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
-          crypto.opening_price = res.RAW[crypto.code][currency].OPEN24HOUR;
-        }));
+        await Promise.all(
+          cryptos.map(async (crypto) => {
+            let res = await request({
+              method: 'GET',
+              uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
+              qs: {
+                api_key: apiKey,
+                tsyms: currency,
+                fsyms: crypto.code,
+              },
+              json: true,
+            });
+            crypto.updated_at = new Date();
+            crypto.current_price = res.RAW[crypto.code][currency].PRICE;
+            crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
+            crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
+            crypto.opening_price = res.RAW[crypto.code][currency].OPEN24HOUR;
+          }),
+        );
         return cryptos;
       } catch (err) {
         console.error(err);
@@ -92,49 +93,49 @@ module.exports = function (Crypto) {
     }),
     (Crypto.cryptoById = async function (req, ids, currency) {
       try {
-        if(!currency) {
-          currency = "EUR"
+        if (!currency) {
+          currency = 'EUR';
         }
         var app = Crypto.app;
         const token = await app.models.Token.find({
           where: { token: req.headers.token },
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
-        console.log(user);
-        if(user.id) {
+        if (user.id) {
           let cryptos = [];
           for (var id in ids) {
             let crypto = await Crypto.findById(id);
-            if(crypto !== null ) {
+            if (crypto !== null) {
               cryptos.push(crypto);
             }
           }
-          await Promise.all(cryptos.map(async (crypto) => {
-            if(crypto !== null) {
-              let res = await request({
-
-                method: 'GET',
-                uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
-                qs: {
-                  api_key: apiKey,
-                  tsyms: currency,
-                  fsyms: crypto.code
-                },
-                json: true,
-              });
-              crypto.updated_at = new Date();
-              crypto.current_price = res.RAW[crypto.code][currency].PRICE;
-              crypto.highest_price = res.RAW[crypto.code][currency].HIGH24HOUR;
-              crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
-              crypto.opening_price = res.RAW[crypto.code][currency].OPEN24HOUR;
-            }
-
-          }));
+          await Promise.all(
+            cryptos.map(async (crypto) => {
+              if (crypto !== null) {
+                let res = await request({
+                  method: 'GET',
+                  uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
+                  qs: {
+                    api_key: apiKey,
+                    tsyms: currency,
+                    fsyms: crypto.code,
+                  },
+                  json: true,
+                });
+                crypto.updated_at = new Date();
+                crypto.current_price = res.RAW[crypto.code][currency].PRICE;
+                crypto.highest_price =
+                  res.RAW[crypto.code][currency].HIGH24HOUR;
+                crypto.lowest_price = res.RAW[crypto.code][currency].LOW24HOUR;
+                crypto.opening_price =
+                  res.RAW[crypto.code][currency].OPEN24HOUR;
+              }
+            }),
+          );
           return cryptos;
         } else {
-          return {error: 'User should be connected'};
+          return { error: 'User should be connected' };
         }
-
       } catch (err) {
         console.error(err);
       }
@@ -144,8 +145,8 @@ module.exports = function (Crypto) {
         var result = {
           cryptos: [],
         };
-        if(!currency) {
-          currency = "EUR"
+        if (!currency) {
+          currency = 'EUR';
         }
         const res = await request({
           method: 'GET',
@@ -160,7 +161,7 @@ module.exports = function (Crypto) {
 
         for (var raw in res.RAW) {
           let crypto = await Crypto.findOne({
-            where: {code: res.RAW[raw][currency].FROMSYMBOL},
+            where: { code: res.RAW[raw][currency].FROMSYMBOL },
           });
           crypto.update_at = new Date();
           crypto.current_price = res.RAW[raw][currency].PRICE;
@@ -181,7 +182,7 @@ module.exports = function (Crypto) {
           where: { token: req.headers.token },
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
-        if(user.role === "ADMIN") {
+        if (user.role === 'ADMIN') {
           const res = await request({
             method: 'GET',
             uri: 'https://min-api.cryptocompare.com/data/blockchain/list',
@@ -204,7 +205,8 @@ module.exports = function (Crypto) {
             });
             const res3 = await request({
               method: 'GET',
-              uri: 'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
+              uri:
+                'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
               qs: {
                 api_key: apiKey,
                 tsyms: data.currency,
@@ -214,7 +216,9 @@ module.exports = function (Crypto) {
             });
             let crypto = await Crypto.findOrCreate(
               {
-                where: {code: res2.RAW[data.symbol][data.currency].FROMSYMBOL},
+                where: {
+                  code: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
+                },
               },
               {
                 code: res2.RAW[data.symbol][data.currency].FROMSYMBOL,
@@ -225,34 +229,36 @@ module.exports = function (Crypto) {
               },
             );
             crypto.current_price = res2.RAW[data.symbol][data.currency].PRICE;
-            crypto.highest_price = res2.RAW[data.symbol][data.currency].HIGH24HOUR;
-            crypto.lowest_price = res2.RAW[data.symbol][data.currency].LOW24HOUR;
-            crypto.opening_price = res2.RAW[data.symbol][data.currency].OPEN24HOUR;
+            crypto.highest_price =
+              res2.RAW[data.symbol][data.currency].HIGH24HOUR;
+            crypto.lowest_price =
+              res2.RAW[data.symbol][data.currency].LOW24HOUR;
+            crypto.opening_price =
+              res2.RAW[data.symbol][data.currency].OPEN24HOUR;
 
             return crypto;
           } else {
-            return {error: 'This coin does not exist'};
+            return { error: 'This coin does not exist' };
           }
         } else {
-          return {error: 'User should be admin'};
+          return { error: 'User should be admin' };
         }
-
       } catch (err) {
         console.error(err);
       }
     }),
     (Crypto.getById = async function (req, id, currency) {
       try {
-        if(!currency) {
-          currency = "EUR"
+        if (!currency) {
+          currency = 'EUR';
         }
         var app = Crypto.app;
         const token = await app.models.Token.find({
           where: { token: req.headers.token },
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
-        if(user.id) {
-          const crypto = await Crypto.findOne({where: {id: id}});
+        if (user.id) {
+          const crypto = await Crypto.findOne({ where: { id: id } });
           const res = await request({
             method: 'GET',
             uri: 'https://min-api.cryptocompare.com/data/v2/histoday',
@@ -282,67 +288,64 @@ module.exports = function (Crypto) {
           crypto.updated_ate = new Date();
           return crypto;
         } else {
-          console.error("User Should be connected")
+          console.error('User Should be connected');
         }
-
       } catch (err) {
         console.error(err);
       }
     }),
     Crypto.remoteMethod('AllMarketCrypto', {
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('cryptoById', {
       accepts: [
-        {arg: 'req', type: 'object', http: { source: 'req' }},
-        {arg: 'cryptoId', type: 'string', required: true},
-        {arg: 'currency', type: 'string', required: true}
+        { arg: 'req', type: 'object', http: { source: 'req' } },
+        { arg: 'cryptoId', type: 'string', required: true },
+        { arg: 'currency', type: 'string', required: true },
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true}
-
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('AllCrypto', {
       accepts: [
-        {arg: 'req', type: 'object', http: { source: 'req' }},
-        {arg: 'currency', type: 'string', required: true}
+        { arg: 'req', type: 'object', http: { source: 'req' } },
+        { arg: 'currency', type: 'string', required: true },
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true}
-
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('detailInfo', {
       accepts: [
-        {arg: 'cryptoSymbol', type: 'string', required: true},
-        {arg: 'currency', type: 'string', required: true},
+        { arg: 'cryptoSymbol', type: 'string', required: true },
+        { arg: 'currency', type: 'string', required: true },
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('histo', {
       accepts: [
-        {arg: 'cryptoId', type: 'string', required: true},
-        {arg: 'period', type: 'string', required: true},
-        {arg: 'currency', type: 'string', required: true},
+        { arg: 'cryptoId', type: 'string', required: true },
+        { arg: 'period', type: 'string', required: true },
+        { arg: 'currency', type: 'string', required: true },
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('getById', {
       accepts: [
-        {arg: 'cryptoId', type: 'string', required: true},
-        {arg: 'currency', type: 'string', required: true},
+        { arg: 'cryptoId', type: 'string', required: true },
+        { arg: 'currency', type: 'string', required: true },
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('postFromSymbol', {
       accepts: [
-        {arg: 'req', type: 'object', http: { source: 'req' }},
-        {arg: 'data', type: 'object', http: {source: 'body'}}
-        ],
-      http: {verb: 'POST'},
-      returns: {type: 'object', root: true},
-    })
+        { arg: 'req', type: 'object', http: { source: 'req' } },
+        { arg: 'data', type: 'object', http: { source: 'body' } },
+      ],
+      http: { verb: 'POST' },
+      returns: { type: 'object', root: true },
+    });
 };
