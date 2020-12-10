@@ -26,11 +26,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b4b67adf-6ef6-4457-9aa2-449d3dbecd40" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/cypress/integration/login.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/cypress/integration/login.spec.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/cypress/plugins/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/cypress/plugins/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/Auth/AuthCard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Auth/AuthCard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/pages/Layout/TopNavbar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/Layout/TopNavbar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/cypress/integration/profile.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/cypress/integration/profile.spec.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/UserProfile/EditProfile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/UserProfile/EditProfile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/pages/Layout/DashboardLayout.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/pages/Layout/DashboardLayout.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +72,7 @@
       <workItem from="1606486958205" duration="3520000" />
       <workItem from="1606985234417" duration="620000" />
       <workItem from="1607093631939" duration="635000" />
-      <workItem from="1607601351535" duration="4907000" />
+      <workItem from="1607601351535" duration="6262000" />
     </task>
     <servers />
   </component>
