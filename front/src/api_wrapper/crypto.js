@@ -2,11 +2,10 @@ import config from '../../config.json';
 
 export async function createCrypto(data) {
   try {
-    const currency = await fetch(`${config.api_url}/cryptos/postFromSymbol`, {
+    const currency = await fetch(`${config.api_url}/cryptos/`, {
       method: 'POST',
       body: JSON.stringify({
         symbol: data.symbol,
-        currency: data.currency,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -54,7 +53,7 @@ export async function getCryptosByIdsCurrency(ids, currency, token) {
     arr = arr.join(',');
 
     const cr = await fetch(
-      `${config.api_url}/cryptos/cryptoById?cryptoId=${arr}&currency=${currency}`,
+      `${config.api_url}/cryptos?cryptoId=${arr}`,
       {
         method: 'GET',
         headers: {
@@ -72,7 +71,7 @@ export async function getCryptosByIdsCurrency(ids, currency, token) {
 export async function getCryptoHistoryByPeriod(id, period, currency) {
   try {
     const cryptos = await fetch(
-      `${config.api_url}/cryptos/histo?cryptoId=${id}&period=${period}&currency=${currency}`,
+      `${config.api_url}/cryptos/${id}/history/${period}`,
       {
         method: 'GET',
       },
