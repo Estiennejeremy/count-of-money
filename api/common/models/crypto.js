@@ -207,7 +207,8 @@ module.exports = function (Crypto) {
             });
             const res3 = await request({
               method: 'GET',
-              uri: 'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
+              uri:
+                'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
               qs: {
                 api_key: apiKey,
                 tsyms: user.default_currency,
@@ -234,12 +235,11 @@ module.exports = function (Crypto) {
 
             return crypto;
           } else {
-            return {error: 'This coin does not exist'};
+            return { error: 'This coin does not exist' };
           }
         } else {
-          return {error: 'User should be admin'};
+          return { error: 'User should be admin' };
         }
-
       } catch (err) {
         console.error(err);
       }
@@ -307,8 +307,8 @@ module.exports = function (Crypto) {
       }
     }),
     Crypto.remoteMethod('AllMarketCrypto', {
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('cryptoById', {
       accepts: [
@@ -332,8 +332,8 @@ module.exports = function (Crypto) {
         {arg: 'req', type: 'object', http: {source: 'req'}},
         {arg: 'cryptoSymbol', type: 'string', required: true},
       ],
-      http: {verb: 'GET'},
-      returns: {type: 'object', root: true},
+      http: { verb: 'GET' },
+      returns: { type: 'object', root: true },
     }),
     Crypto.remoteMethod('histo', {
       accepts: [

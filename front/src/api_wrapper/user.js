@@ -23,6 +23,20 @@ export async function getUserById(userId) {
   }
 }
 
+export async function getAdminUser() {
+  try {
+    const res = await fetch(
+      `${config.api_url}/users/?filter=%7B%22where%22%3A%7B%22username%22%3A%22admin%22%7D%7D`,
+      {
+        method: 'GET',
+      },
+    );
+    return await res.json();
+  } catch (e) {
+    return { err: e };
+  }
+}
+
 export async function getUserRoleById(userId) {
   try {
     const res = await fetch(`${config.api_url}/users/${userId}`, {

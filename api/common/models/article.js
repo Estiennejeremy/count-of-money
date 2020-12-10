@@ -11,7 +11,6 @@ async function createArticlesFromRSS(app) {
       var feedData = await parser.parseURL(feed.url);
       feedData.items.forEach((item) => {
         var params = feed.params;
-        console.log('TITLE: ', item[params.title]);
         app.models.Article.findOrCreate(
           {
             where: {
