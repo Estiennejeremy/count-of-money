@@ -9,13 +9,14 @@
           v-if="userRole === 'USER' || userRole === 'ADMIN'"
           class="far fa-user icon"
         ></i>
-        <p v-if="userRole === 'USER' || userRole === 'ADMIN'" class="username">
+        <p data-cy="profile-name" v-if="userRole === 'USER' || userRole === 'ADMIN'" class="username">
           {{ username }}
         </p>
         <md-button
           v-if="userRole === 'USER' || userRole === 'ADMIN'"
           class="md-raised md-danger button-size"
           @click.prevent="handleLogout"
+          data-cy="btn-logout"
         >
           Logout
         </md-button>
