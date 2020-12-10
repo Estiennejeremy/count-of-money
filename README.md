@@ -4,7 +4,7 @@
 
 ### Development mode
 
-`docker-compose -f docker-compose.dev.yml up --build -d`
+`cd front && npm i && cd ../api && npm i && cd ../ && docker-compose -f docker-compose.dev.yml up --build -d`
 
 ### Production mode
 
