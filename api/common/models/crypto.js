@@ -358,7 +358,7 @@ module.exports = function (Crypto) {
         {arg: 'req', type: 'object', http: {source: 'req'}},
         {arg: 'cryptoId', type: 'string', required: true}
       ],
-      http: {verb: 'GET', path: "{:cryptoId}"},
+      http: {verb: 'GET', path: "/"},
       returns: {type: 'object', root: true}
 
     }),
