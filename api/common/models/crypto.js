@@ -5,6 +5,7 @@ const apiKey =
   'b77606858f053810bcf46280591652316cd784a9fb65863e4a814ab4c3658915';
 
 module.exports = function (Crypto) {
+
   Crypto.disableRemoteMethodByName('find');
   Crypto.disableRemoteMethodByName('findOne');
   Crypto.disableRemoteMethodByName('deleteById');
@@ -59,7 +60,7 @@ module.exports = function (Crypto) {
             api_key: apiKey,
             limit: limit,
             fsym: crypto.code,
-            tsym: user.default_currency
+            tsym: defaultCurrency
           },
           json: true,
         });
@@ -75,6 +76,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         let cryptos = await Crypto.find();
         var timeStamp = null;
         let limit = null;
@@ -118,7 +120,8 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
-        let cryptos = await Crypto.find();
+      var defaultCurrency = user.default_currency.toUpperCase();
+      let cryptos = await Crypto.find();
 
         await Promise.all(cryptos.map(async (crypto) => {
           let res = await request({
@@ -127,16 +130,16 @@ module.exports = function (Crypto) {
             uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
             qs: {
               api_key: apiKey,
-              tsyms: user.default_currency,
+              tsyms: defaultCurrency,
               fsyms: crypto.code
             },
             json: true,
           });
           crypto.updated_at = new Date();
-          crypto.current_price = res.RAW[crypto.code][user.default_currency].PRICE;
-          crypto.highest_price = res.RAW[crypto.code][user.default_currency].HIGH24HOUR;
-          crypto.lowest_price = res.RAW[crypto.code][user.default_currency].LOW24HOUR;
-          crypto.opening_price = res.RAW[crypto.code][user.default_currency].OPEN24HOUR;
+          crypto.current_price = res.RAW[crypto.code][defaultCurrency].PRICE;
+          crypto.highest_price = res.RAW[crypto.code][defaultCurrency].HIGH24HOUR;
+          crypto.lowest_price = res.RAW[crypto.code][defaultCurrency].LOW24HOUR;
+          crypto.opening_price = res.RAW[crypto.code][defaultCurrency].OPEN24HOUR;
         }));
         return cryptos;
       } catch (err) {
@@ -153,6 +156,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         let cryptos = [];
         let idsArray = ids.split(',');
         await Promise.all(idsArray.map(async (id) => {
@@ -172,16 +176,16 @@ module.exports = function (Crypto) {
               uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
               qs: {
                 api_key: apiKey,
-                tsyms: user.default_currency,
+                tsyms: defaultCurrency,
                 fsyms: crypto.code
               },
               json: true,
             });
             crypto.updated_at = new Date();
-            crypto.current_price = res.RAW[crypto.code][user.default_currency].PRICE;
-            crypto.highest_price = res.RAW[crypto.code][user.default_currency].HIGH24HOUR;
-            crypto.lowest_price = res.RAW[crypto.code][user.default_currency].LOW24HOUR;
-            crypto.opening_price = res.RAW[crypto.code][user.default_currency].OPEN24HOUR;
+            crypto.current_price = res.RAW[crypto.code][defaultCurrency].PRICE;
+            crypto.highest_price = res.RAW[crypto.code][defaultCurrency].HIGH24HOUR;
+            crypto.lowest_price = res.RAW[crypto.code][defaultCurrency].LOW24HOUR;
+            crypto.opening_price = res.RAW[crypto.code][defaultCurrency].OPEN24HOUR;
           }
 
         }));
@@ -197,6 +201,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         var result = {
           cryptos: [],
         };
@@ -205,7 +210,7 @@ module.exports = function (Crypto) {
           uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
           qs: {
             api_key: apiKey,
-            tsyms: user.default_currency,
+            tsyms: defaultCurrency,
             fsyms: symbol,
           },
           json: true,
@@ -213,13 +218,13 @@ module.exports = function (Crypto) {
 
         for (var raw in res.RAW) {
           let crypto = await Crypto.findOne({
-            where: {code: res.RAW[raw][user.default_currency].FROMSYMBOL},
+            where: {code: res.RAW[raw][defaultCurrency].FROMSYMBOL},
           });
           crypto.update_at = new Date();
-          crypto.current_price = res.RAW[raw][user.default_currency].PRICE;
-          crypto.highest_price = res.RAW[raw][user.default_currency].HIGH24HOUR;
-          crypto.lowest_price = res.RAW[raw][user.default_currency].LOW24HOUR;
-          crypto.opening_price = res.RAW[raw][user.default_currency].OPEN24HOUR;
+          crypto.current_price = res.RAW[raw][defaultCurrency].PRICE;
+          crypto.highest_price = res.RAW[raw][defaultCurrency].HIGH24HOUR;
+          crypto.lowest_price = res.RAW[raw][defaultCurrency].LOW24HOUR;
+          crypto.opening_price = res.RAW[raw][defaultCurrency].OPEN24HOUR;
           result.cryptos.push(crypto);
         }
         return result;
@@ -234,6 +239,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         if (user.role === "admin" || user.role === "ADMIN") {
           const res = await request({
             method: 'GET',
@@ -250,7 +256,7 @@ module.exports = function (Crypto) {
               uri: 'https://min-api.cryptocompare.com/data/pricemultifull',
               qs: {
                 api_key: apiKey,
-                tsyms: user.default_currency,
+                tsyms: defaultCurrency,
                 fsyms: data.symbol,
               },
               json: true,
@@ -261,27 +267,27 @@ module.exports = function (Crypto) {
                 'https://min-api.cryptocompare.com/data/blockchain/mining/calculator',
               qs: {
                 api_key: apiKey,
-                tsyms: user.default_currency,
+                tsyms: defaultCurrency,
                 fsyms: data.symbol,
               },
               json: true,
             });
             let crypto = await Crypto.findOrCreate(
               {
-                where: {code: res2.RAW[data.symbol][user.default_currency].FROMSYMBOL},
+                where: {code: res2.RAW[data.symbol][defaultCurrency].FROMSYMBOL},
               },
               {
-                code: res2.RAW[data.symbol][user.default_currency].FROMSYMBOL,
+                code: res2.RAW[data.symbol][defaultCurrency].FROMSYMBOL,
                 name: res3.Data[data.symbol].CoinInfo.FullName,
-                ico_url: res2.RAW[data.symbol][user.default_currency].IMAGEURL,
+                ico_url: res2.RAW[data.symbol][defaultCurrency].IMAGEURL,
                 created_at: new Date(),
                 updated_at: new Date(),
               },
             );
-            crypto.current_price = res2.RAW[data.symbol][user.default_currency].PRICE;
-            crypto.highest_price = res2.RAW[data.symbol][user.default_currency].HIGH24HOUR;
-            crypto.lowest_price = res2.RAW[data.symbol][user.default_currency].LOW24HOUR;
-            crypto.opening_price = res2.RAW[data.symbol][user.default_currency].OPEN24HOUR;
+            crypto.current_price = res2.RAW[data.symbol][defaultCurrency].PRICE;
+            crypto.highest_price = res2.RAW[data.symbol][defaultCurrency].HIGH24HOUR;
+            crypto.lowest_price = res2.RAW[data.symbol][defaultCurrency].LOW24HOUR;
+            crypto.opening_price = res2.RAW[data.symbol][defaultCurrency].OPEN24HOUR;
 
             return crypto;
           } else {
@@ -301,6 +307,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         let crypto = null;
         if (user.id !== null) {
           crypto = await Crypto.findOne({where: {id: id}});
@@ -309,7 +316,7 @@ module.exports = function (Crypto) {
             uri: 'https://min-api.cryptocompare.com/data/v2/histoday',
             qs: {
               fsym: crypto.code,
-              tsym: user.default_currency,
+              tsym: defaultCurrency,
               limit: '1',
               api_key: apiKey,
             },
@@ -320,13 +327,13 @@ module.exports = function (Crypto) {
             uri: 'https://min-api.cryptocompare.com/data/price',
             qs: {
               fsym: crypto.code,
-              tsyms: user.default_currency,
+              tsyms: defaultCurrency,
               api_key: apiKey,
             },
             json: true,
           });
 
-          crypto.current_price = res[user.default_currency];
+          crypto.current_price = res[defaultCurrency];
           crypto.highest_price = res.Data.Data[0].high;
           crypto.lowest_price = res.Data.Data[0].low;
           crypto.opening_price = res.Data.Data[0].open;
@@ -347,6 +354,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
+        var defaultCurrency = user.default_currency.toUpperCase();
         if (user.role === "ADMIN") {
           return Crypto.deleteById(id);
         } else {
