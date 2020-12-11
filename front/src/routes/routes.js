@@ -14,7 +14,7 @@ function authGuard(to, from, next) {
   if (!Cookies.get('token')) {
     next();
   } else {
-    next('/crypto');
+    next('/cryptos');
   }
 }
 
