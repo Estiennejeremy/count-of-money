@@ -102,7 +102,7 @@ export default {
         this.formError = 'This keyword is already used by another RSS feed';
         return;
       }
-      const feed = await createFeed(this.rss, keyword.id);
+      const feed = await createFeed(this.rss, keyword[0].id);
       if (feed.error) this.formError = 'This RSS feed already exists';
       else this.formSuccess = 'RSS feed successfully added !';
     },

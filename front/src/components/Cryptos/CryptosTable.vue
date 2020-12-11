@@ -58,7 +58,6 @@ export default {
 
     this.cryptos = await getCryptosByIdsCurrency(
       this.user.cryptos,
-      this.user.currency,
       token || '',
     );
     this.cryptos.forEach(e => {

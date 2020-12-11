@@ -1,6 +1,7 @@
 import config from '../../config.json';
+import Cookies from 'js-cookie';
 
-export async function createCrypto(data) {
+export async function createCrypto(data, token) {
   try {
     const currency = await fetch(`${config.api_url}/cryptos/`, {
       method: 'POST',
@@ -9,6 +10,7 @@ export async function createCrypto(data) {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
+        token: token,
       },
     });
     return await currency.json();
@@ -21,6 +23,7 @@ export async function getAllCryptos() {
   try {
     const cryptos = await fetch(`${config.api_url}/cryptos`, {
       method: 'GET',
+      header: { token: Cookies.get('token') },
     });
     return await cryptos.json();
   } catch (e) {
@@ -32,6 +35,7 @@ export async function deleteCryptoById(cryptoId) {
   try {
     const res = await fetch(`${config.api_url}/cryptos/${cryptoId}`, {
       method: 'DELETE',
+      header: { token: Cookies.get('token') },
     });
     return await res.json();
   } catch (e) {
@@ -39,30 +43,16 @@ export async function deleteCryptoById(cryptoId) {
   }
 }
 
-export async function getCryptosByIdsCurrency(ids, currency, token) {
+export async function getCryptosByIdsCurrency(ids, token) {
   try {
-    let cryptos = await getAllCryptos();
-    let arr = [];
-
-    ids.forEach(e => {
-      cryptos.forEach(el => {
-        if (el.id === e) arr.push(el.id);
-      });
-    });
-
-    arr = arr.join(',');
-    
-    const cr = await fetch(
-      `${config.api_url}/cryptos?cryptoId=${arr}`,
-      {
-        method: 'GET',
-        headers: {
-          token: token,
-        },
+    const arr = ids.join(',');
+    const cr = await fetch(`${config.api_url}/cryptos?cryptoId=${arr}`, {
+      method: 'GET',
+      headers: {
+        token: token,
       },
-    );
-
-    return cr.json();
+    });
+    return await cr.json();
   } catch (error) {
     return { err: error };
   }

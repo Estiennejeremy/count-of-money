@@ -13,10 +13,7 @@ export async function startArticlesCronJob() {
 
 export async function getArticlesByKeywords(keywordsId, token) {
   try {
-    let keywordsQuery = '';
-    keywordsId.forEach(
-      element => (keywordsQuery = `${keywordsQuery}${element},`),
-    );
+    const keywordsQuery = keywordsId.join(',');
     const articles = await fetch(
       `${config.api_url}/articles?keywords=${keywordsQuery}`,
       {

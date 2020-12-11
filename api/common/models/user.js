@@ -13,14 +13,17 @@ module.exports = function (User) {
         where: { username: data.username },
       });
       if (checkUser) return { error: 'User already exists' };
+      const admin = await User.findOne({
+        where: { username: 'admin' },
+      });
       const userRes = await User.create({
         username: data.username,
         password_hash: sha1(data.password),
         email: data.email,
+        crypto_array: admin.crypto_array,
       });
       return { user: userRes };
     } catch (e) {
-      console.log('error: ', e);
       return { error: 'An error occured' };
     }
   };
@@ -44,7 +47,6 @@ module.exports = function (User) {
       });
       return { userToken: uuid };
     } catch (e) {
-      console.log('error: ', e);
       return { error: 'An error occured' };
     }
   };
@@ -63,7 +65,6 @@ module.exports = function (User) {
       });
       return res;
     } catch (e) {
-      console.log('error: ', e);
       return { error: 'an error occured' };
     }
   };
@@ -92,7 +93,6 @@ module.exports = function (User) {
       });
       return { userToken: uuid };
     } catch (e) {
-      console.log('error: ', e);
       return { error: e };
     }
   };

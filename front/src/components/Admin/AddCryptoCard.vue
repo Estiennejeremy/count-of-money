@@ -50,10 +50,14 @@ export default {
         this.formError = 'You must give a cryptocurrency code';
         return;
       }
-      const cryptoRes = await createCrypto({
-        symbol: this.cryptoCode,
-        currency: 'EUR',
-      });
+      const token = Cookies.get('token');
+      const cryptoRes = await createCrypto(
+        {
+          symbol: this.cryptoCode,
+          currency: 'EUR',
+        },
+        token,
+      );
       if (cryptoRes.error)
         this.formError = 'This cryptocurrency does not exist';
       else this.formSuccess = 'Crypto currency added successfully !';
