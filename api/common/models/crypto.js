@@ -154,14 +154,18 @@ module.exports = function (Crypto) {
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
         let cryptos = [];
-        for (var id in ids) {
-          if(ids[id] != ",") {
-            let crypto = await Crypto.findById(ids[id]);
+        let idsArray = ids.split(',');
+        await Promise.all(idsArray.map(async (id) => {
+          if (id != ",") {
+            let crypto = await Crypto.findById(id);
+            console.log(crypto);
             if (crypto !== null) {
               cryptos.push(crypto);
             }
           }
         }
+      ));
+        console.log(cryptos);
         await Promise.all(cryptos.map(async (crypto) => {
           if (crypto !== null) {
             let res = await request({
