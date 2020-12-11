@@ -71,7 +71,7 @@ export async function getCryptosByIdsCurrency(ids, currency, token) {
 export async function getCryptoHistoryByPeriod(id, period, currency) {
   try {
     const cryptos = await fetch(
-      `${config.api_url}/cryptos/${id}/history/${period}`,
+      `${config.api_url}/cryptos/${id}/history/${period}/${currency}`,
       {
         method: 'GET',
       },

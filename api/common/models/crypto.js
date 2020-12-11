@@ -68,6 +68,49 @@ module.exports = function (Crypto) {
         console.error(err);
       }
     }),
+    (Crypto.histoCurrency = async function (req, id, time, currency) {
+      try {
+        var app = Crypto.app;
+        const token = await app.models.Token.find({
+          where: {token: req.headers.token},
+        });
+        const user = await app.models.User.findById(token[0].fk_user_id);
+        let cryptos = await Crypto.find();
+        var timeStamp = null;
+        let limit = null;
+        switch (time) {
+          case "daily":
+            timeStamp = "day";
+            limit = 60;
+            break;
+          case "hourly":
+            timeStamp = "hour";
+            limit = 48;
+            break;
+          case "minute":
+            timeStamp = "minute";
+            limit = 120;
+            break;
+        }
+
+        // time = minute / hour / day
+        let crypto = await Crypto.findById(id);
+        const res = await request({
+          method: 'GET',
+          uri: 'https://min-api.cryptocompare.com/data/v2/histo' + timeStamp,
+          qs: {
+            api_key: apiKey,
+            limit: limit,
+            fsym: crypto.code,
+            tsym: currency
+          },
+          json: true,
+        });
+        return res;
+      } catch (err) {
+        console.error(err);
+      }
+    }),
     (Crypto.AllCrypto = async function (req) {
       try {
         var app = Crypto.app;
@@ -342,6 +385,16 @@ module.exports = function (Crypto) {
         {arg: 'period', type: 'string', required: true},
       ],
       http: {verb: 'GET', path: "/:cryptoId/history/:period"},
+      returns: {type: 'object', root: true},
+    }),
+    Crypto.remoteMethod('histoCurrency', {
+      accepts: [
+        {arg: 'req', type: 'object', http: {source: 'req'}},
+        {arg: 'cryptoId', type: 'string', required: true},
+        {arg: 'period', type: 'string', required: true},
+        {arg: 'currency', type: 'string', required: true},
+      ],
+      http: {verb: 'GET', path: "/:cryptoId/history/:period/:currency"},
       returns: {type: 'object', root: true},
     }),
     Crypto.remoteMethod('getById', {
