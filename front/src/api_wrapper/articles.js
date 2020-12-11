@@ -18,7 +18,7 @@ export async function getArticlesByKeywords(keywordsId, token) {
       element => (keywordsQuery = `${keywordsQuery}${element},`),
     );
     const articles = await fetch(
-      `${config.api_url}/articles/getByKeywordsId?keywords=${keywordsQuery}`,
+      `${config.api_url}/articles?keywords=${keywordsQuery}`,
       {
         method: 'GET',
         headers: {
