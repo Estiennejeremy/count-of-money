@@ -10,7 +10,7 @@
       </sidebar-link>
       <sidebar-link to="/articles">
         <md-icon>article</md-icon>
-        <p>Articles</p>
+        <p data-cy="menu-articles">Articles</p>
       </sidebar-link>
       <sidebar-link to="/user" v-if="userRole === 'USER'">
         <md-icon>person</md-icon>
