@@ -15,3 +15,7 @@
 - The app is running at : `localhost:8080`
 - The api documentation is running at : `http://localhost:8081/explorer/#/`
 - The api url is : `localhost:8081/api`
+
+### Test e2e
+ - cd front
+ - npm run e2e
