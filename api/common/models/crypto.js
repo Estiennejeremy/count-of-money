@@ -232,7 +232,7 @@ module.exports = function (Crypto) {
           where: {token: req.headers.token},
         });
         const user = await app.models.User.findById(token[0].fk_user_id);
-        if (user.role === "ADMIN") {
+        if (user.role === "admin" || user.role === "ADMIN") {
           const res = await request({
             method: 'GET',
             uri: 'https://min-api.cryptocompare.com/data/blockchain/list',
