@@ -144,6 +144,9 @@ module.exports = function (Crypto) {
       }
     }),
     (Crypto.cryptoById = async function (req, ids) {
+      if(!ids) {
+        return Crypto.AllCrypto(req);
+      }
       try {
         var app = Crypto.app;
         const token = await app.models.Token.find({
@@ -152,9 +155,11 @@ module.exports = function (Crypto) {
         const user = await app.models.User.findById(token[0].fk_user_id);
         let cryptos = [];
         for (var id in ids) {
-          let crypto = await Crypto.findById(id);
-          if (crypto !== null) {
-            cryptos.push(crypto);
+          if(ids[id] != ",") {
+            let crypto = await Crypto.findById(ids[id]);
+            if (crypto !== null) {
+              cryptos.push(crypto);
+            }
           }
         }
         await Promise.all(cryptos.map(async (crypto) => {
@@ -356,15 +361,7 @@ module.exports = function (Crypto) {
     Crypto.remoteMethod('cryptoById', {
       accepts: [
         {arg: 'req', type: 'object', http: {source: 'req'}},
-        {arg: 'cryptoId', type: 'string', required: true}
-      ],
-      http: {verb: 'GET', path: "{:cryptoId}"},
-      returns: {type: 'object', root: true}
-
-    }),
-    Crypto.remoteMethod('AllCrypto', {
-      accepts: [
-        {arg: 'req', type: 'object', http: {source: 'req'}}
+        {arg: 'cryptoId', type: 'string', required: false}
       ],
       http: {verb: 'GET', path: "/"},
       returns: {type: 'object', root: true}

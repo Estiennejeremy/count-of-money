@@ -46,12 +46,12 @@ export async function getCryptosByIdsCurrency(ids, currency, token) {
 
     ids.forEach(e => {
       cryptos.forEach(el => {
-        if (el.id === e) arr.push(el.code);
+        if (el.id === e) arr.push(el.id);
       });
     });
 
     arr = arr.join(',');
-
+    
     const cr = await fetch(
       `${config.api_url}/cryptos?cryptoId=${arr}`,
       {
