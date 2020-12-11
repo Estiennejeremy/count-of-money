@@ -158,7 +158,6 @@ module.exports = function (Crypto) {
         await Promise.all(idsArray.map(async (id) => {
           if (id != ",") {
             let crypto = await Crypto.findById(id);
-            console.log(crypto);
             if (crypto !== null) {
               cryptos.push(crypto);
             }
