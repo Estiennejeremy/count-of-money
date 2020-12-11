@@ -33,6 +33,7 @@
               v-if="authType === 'signup'"
               class="md-raised md-info button-size"
               @click.prevent="signup"
+              data-cy="btn-create"
               >Create</md-button
             >
             <md-button
