@@ -25,13 +25,13 @@
         <div class="md-layout-item md-small-size-100 md-size-75">
           <md-field>
             <label>Username</label>
-            <md-input v-model="user.username"></md-input>
+            <md-input data-cy="profile-username" v-model="user.username"></md-input>
           </md-field>
         </div>
         <div class="md-layout-item md-small-size-100 md-size-75">
           <md-field>
             <label>Email</label>
-            <md-input v-model="user.email"></md-input>
+            <md-input data-cy="profile-email" v-model="user.email"></md-input>
           </md-field>
         </div>
         <div class="md-layout-item md-small-size-100 md-size-75">
@@ -41,7 +41,7 @@
           </md-field>
         </div>
         <div class="md-layout-item md-size-100 text-right">
-          <md-button class="md-raised md-primary" @click.prevent="sendEdit"
+          <md-button data-cy="btn-edit-profile" class="md-raised md-primary" @click.prevent="sendEdit"
             >Edit Profile</md-button
           >
         </div>

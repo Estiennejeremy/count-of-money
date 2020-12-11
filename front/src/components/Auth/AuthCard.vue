@@ -13,19 +13,19 @@
           >
             <md-field>
               <label>Email</label>
-              <md-input v-model="user.email"></md-input>
+              <md-input data-cy="text-email" v-model="user.email"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-small-size-100 md-size-80">
             <md-field>
               <label>Username</label>
-              <md-input v-model="user.username"></md-input>
+              <md-input data-cy="text-username" v-model="user.username"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-small-size-100 md-size-80">
             <md-field>
               <label>Password</label>
-              <md-input v-model="user.password" type="password"></md-input>
+              <md-input data-cy="text-mdp" v-model="user.password" type="password"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-size-100 center-content">
@@ -33,12 +33,14 @@
               v-if="authType === 'signup'"
               class="md-raised md-info button-size"
               @click.prevent="signup"
+              data-cy="btn-create"
               >Create</md-button
             >
             <md-button
               v-if="authType === 'signin'"
               class="md-raised md-info button-size"
               @click.prevent="signin"
+              data-cy="btn-connexion"
               >Log in</md-button
             >
             <span class="form-error">{{ formError }}</span>

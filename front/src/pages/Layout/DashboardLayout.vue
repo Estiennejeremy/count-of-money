@@ -10,11 +10,11 @@
       </sidebar-link>
       <sidebar-link to="/articles">
         <md-icon>article</md-icon>
-        <p>Articles</p>
+        <p data-cy="menu-articles">Articles</p>
       </sidebar-link>
       <sidebar-link to="/user" v-if="userRole === 'USER'">
         <md-icon>person</md-icon>
-        <p>User Profile</p>
+        <p data-cy="menu-profile">User Profile</p>
       </sidebar-link>
       <sidebar-link to="/admin" v-if="userRole === 'ADMIN'">
         <md-icon>admin_panel_settings</md-icon>

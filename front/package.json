@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
+    "e2e-watch": "ng e2e cypress --watch",
+    "e2e": "cypress open",
     "dev": "npm run serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
@@ -32,6 +34,7 @@
     "@vue/cli-service": "4.2.3",
     "@vue/eslint-config-prettier": "6.0.0",
     "babel-eslint": "10.1.0",
+    "cypress": "^6.0.1",
     "es6-promise": "4.2.8",
     "eslint": "6.8.0",
     "eslint-plugin-prettier": "3.1.2",
