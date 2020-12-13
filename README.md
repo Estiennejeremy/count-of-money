@@ -16,6 +16,11 @@
 - The api documentation is running at : `http://localhost:8081/explorer/#/`
 - The api url is : `localhost:8081/api`
 
-### Test e2e
- - cd front
- - npm run e2e
+### Start the E2E tests
+
+- cd front
+- npm run e2e
+
+### Repository
+
+Project repository is accessible at : **https://github.com/EpitechMscPro2020/count-of-money-02**
